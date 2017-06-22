@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         dataTable = (ListView)findViewById(R.id.dataTable);
+//        create the data manager (loads the data and displays it)
         dataManager = new DataManager(this);
     }
 }

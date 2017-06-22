@@ -34,25 +34,36 @@ public class DataManager {
         resources = activity.getResources();
         init();
     }
-
+    /*
+        This function takes an item and appends it to the list of items
+     */
     public void add_item(JSONObject obj) {
         list_data_items.add(obj);
     }
+    /*
+        This function returrns the current size of the list
+     */
     public int size() {
         return list_data_items.size();
     }
+    /*
+        This function returns all items
+     */
     public ArrayList<JSONObject> get_items() {
         return list_data_items;
     }
-
+    /*
+        This function loads the data and initializes the adapter.
+     */
     private void init() {
         this.load_data_items();
         ListView dataTable  = (ListView)activity.findViewById(R.id.dataTable);
         DataArrayAdapter adapter = new DataArrayAdapter(activity, get_items());
         dataTable.setAdapter(adapter);
     }
-
-
+    /*
+        This function loads the data from the file and adds each item to the list
+     */
     private void load_data_items() {
         try {
             System.out.println(new InputStreamReader(resources.openRawResource(R.raw.file_short)));
