@@ -33,5 +33,6 @@ public class MainActivity extends AppCompatActivity {
         dataTable = (ListView)findViewById(R.id.dataTable);
 //        create the data manager (loads the data and displays it)
         dataManager = new DataManager(this);
+        System.out.println(dataManager.get_columns());
     }
 }
