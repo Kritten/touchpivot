@@ -1,27 +1,22 @@
 package de.uni_weimar.touchpivot;
 
 import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.content.res.Resources;
+
+import com.github.mikephil.charting.data.Entry;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by micro on 22.06.2017.
@@ -36,19 +31,18 @@ public class DataManager {
     public DataManager(MainActivity mainActivity) {
         activity = mainActivity;
         resources = activity.getResources();
-        System.out.println(this.get_columns());
         init();
     }
     /*
         This function takes an item and appends it to the list of items
      */
-    public void add_item(JSONObject obj) {
+    public void addItem(JSONObject obj) {
         list_data_items.add(obj);
     }
     /*
         This function returrns the current size of the list
      */
-    public int get_count_items() {
+    public int getCountItems() {
         return list_data_items.size();
     }
     /*
@@ -60,20 +54,31 @@ public class DataManager {
     /*
         This function returns the number of columns
      */
-    public int get_count_columns() {
+    public int getCountColumns() {
         return list_columns.size();
+    }
+    public ArrayList<String> getColumn(String column) {
+        ArrayList<String> result = new ArrayList<>();
+        for(JSONObject item: this.get_items()) {
+            try {
+                result.add(item.getString(column));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
     }
     /*
         This function returns all items
      */
-    public ArrayList<String> get_columns() {
+    public ArrayList<String> getColumns() {
         return list_columns;
     }
     /*
         This function loads the data and initializes the adapter.
      */
     private void init() {
-        this.load_data_items();
+        this.loadDataItems();
         ListView dataTable = (ListView)activity.findViewById(R.id.dataTable);
         DataArrayAdapter adapter = new DataArrayAdapter(activity, this);
         dataTable.setAdapter(adapter);
@@ -81,15 +86,16 @@ public class DataManager {
     /*
         This function loads the data from the file and adds each item to the list
      */
-    private void load_data_items() {
+    private void loadDataItems() {
         try {
-            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.file_short)));
+            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.exported_data)));
+//            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.file_short)));
             for(String line; (line = br.readLine()) != null; ) {
                 JSONObject obj = new JSONObject(line);
-                this.add_item(obj);
-                this.add_item(obj);
-                this.add_item(obj);
-                this.add_item(obj);
+                this.addItem(obj);
+                this.addItem(obj);
+                this.addItem(obj);
+                this.addItem(obj);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();

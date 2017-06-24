@@ -1,28 +1,23 @@
 package de.uni_weimar.touchpivot;
 
-import android.content.Context;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
+
+import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
     private DataManager dataManager = null;
+    private GraphManager graphManger = null;
     private ListView dataTable = null;
 
     @Override
@@ -33,6 +28,23 @@ public class MainActivity extends AppCompatActivity {
         dataTable = (ListView)findViewById(R.id.dataTable);
 //        create the data manager (loads the data and displays it)
         dataManager = new DataManager(this);
-        System.out.println(dataManager.get_columns());
+        graphManger = new GraphManager(this);
+
+        graphManger.showStats(dataManager);
+
+//        List<List<Entry>> data = new ArrayList<>();
+        List<BarEntry> entries = new ArrayList<>();
+        int counter = 0;
+        for(String column: dataManager.getColumns()) {
+            Set<String> set = new HashSet<>();
+            for(String value: dataManager.getColumn(column)) {
+                set.add(value);
+            }
+            entries.add(new BarEntry(counter, set.size()));
+            counter += 1;
+        }
+
+//        graphManger.renderGraphBottom(entries);
+        graphManger.renderGraphBottom(entries, dataManager.getColumns());
     }
 }
