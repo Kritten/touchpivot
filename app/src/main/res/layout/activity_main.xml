@@ -26,15 +26,25 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/rootView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
 
         <RelativeLayout
+            android:id="@+id/layout_graph_top"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
+
+            <!--<TextView-->
+                <!--android:id="@+id/destTextView"-->
+                <!--android:layout_width="50dp"-->
+                <!--android:layout_height="50dp"-->
+                <!--android:layout_margin="10dp"-->
+                <!--android:background="@android:color/holo_blue_bright"-->
+                <!--android:text="to" />-->
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -45,45 +55,49 @@
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
                     android:layout_marginRight="10dp"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/text_count_rows"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Rows" />
+                        android:text="Rows"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
                         android:id="@+id/textview_count_rows"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="" />
-                </LinearLayout >
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:gravity="center_horizontal"
                     android:layout_marginLeft="10dp"
+                    android:gravity="center_horizontal"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/text_count_columns"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="Columns" />
+                        android:text="Columns"
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
 
                     <TextView
                         android:id="@+id/textview_count_columns"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceLarge"
-                        android:text="" />
-                </LinearLayout >
-            </LinearLayout >
+                        android:text=""
+                        android:textAppearance="?android:attr/textAppearanceLarge" />
+                </LinearLayout>
+            </LinearLayout>
+
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -92,6 +106,13 @@
             android:layout_height="match_parent"
             android:layout_weight="1">
 
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="50dp"
+                android:background="@android:color/holo_blue_bright"
+                android:text="to" />
         </RelativeLayout>
-    </LinearLayout >
+    </LinearLayout>
 </LinearLayout >
