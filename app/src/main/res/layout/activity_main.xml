@@ -7,7 +7,9 @@
     android:orientation="horizontal"
     tools:context="de.uni_weimar.touchpivot.MainActivity">
 
+
     <RelativeLayout
+        android:id="@+id/data_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_weight="1">
@@ -18,17 +20,30 @@
             android:layout_height="match_parent"
             android:text="Hello World!" />
 
+        <Button
+            android:id="@+id/fan_menu_button"
+            android:layout_width="50dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true" />
+
         <ListView
             android:id="@+id/dataTable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
 
         <com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenu
             android:id="@+id/radial_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:padding="5dp"/>
+            android:visibility="gone"
+            android:padding="5dp" />
+
+
     </RelativeLayout>
+
+
 
 
     <LinearLayout

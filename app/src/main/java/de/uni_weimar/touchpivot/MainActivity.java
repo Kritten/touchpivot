@@ -5,6 +5,9 @@ import android.support.v4.app.FragmentActivity;
 
 import android.os.Bundle;
 
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +16,11 @@ import android.widget.ListView;
 
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
+import com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenu;
+import com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenuItem;
 
+
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -22,17 +29,17 @@ import java.util.List;
 import java.util.Set;
 
 
-import com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenu;
-import com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenuItem;
-import com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenuItem.OnSemiCircularRadialMenuPressed;
 
 
-public class MainActivity extends FragmentActivity{
+public class MainActivity extends AppCompatActivity{
     private DataManager dataManager = null;
     private GraphManager graphManger = null;
     private ListView dataTable = null;
 
+    private RelativeLayout dataView;
     private SemiCircularRadialMenu mMenu;
+    private Button fanMenuButton;
+    private boolean fanActivated = false;
 
 
     @Override
@@ -45,7 +52,15 @@ public class MainActivity extends FragmentActivity{
         dataManager = new DataManager(this);
 
         // init fan menu
-        initDataSelectionMenu(dataManager.getColumns());
+        dataView = (RelativeLayout) findViewById(R.id.data_view);
+        fanMenuButton = (Button) findViewById(R.id.fan_menu_button);
+        fanMenuButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showFanMenu();
+            }
+        });
+        initFanMenu(dataManager.getColumns());
 
         graphManger = new GraphManager(this);
 
@@ -68,13 +83,17 @@ public class MainActivity extends FragmentActivity{
 
     }
 
-    private void initDataSelectionMenu(ArrayList<String> columns) {
+    private void initFanMenu(ArrayList<String> columns) {
+//      mMenu = new SemiCircularRadialMenu(this);
         mMenu = (SemiCircularRadialMenu) findViewById(R.id.radial_menu);
+        mMenu.setShowMenuText(true);
+
+
         int col_count = columns.size();
         for (int i = 0; i < col_count; i++) {
             String name = columns.get(i);
             SemiCircularRadialMenuItem button = new SemiCircularRadialMenuItem(name, getResources().getDrawable(R.drawable.ic_rep), name);
-            button.setOnSemiCircularRadialMenuPressed(new OnSemiCircularRadialMenuPressed() {
+            button.setOnSemiCircularRadialMenuPressed(new SemiCircularRadialMenuItem.OnSemiCircularRadialMenuPressed() {
                 @Override
                 public void onMenuItemPressed() {
                     Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_LONG).show();
@@ -82,6 +101,19 @@ public class MainActivity extends FragmentActivity{
             });
             System.out.println("ID " + button.getMenuID());
             mMenu.addMenuItem(button.getMenuID(), button);
+        }
+        // adapted sample code from https://github.com/strider2023/Radial-Menu-Widget-Android (1.7.2017)
+    }
+
+    private void showFanMenu() {
+        if (fanActivated){
+            mMenu.setVisibility(View.GONE);
+            mMenu.dismissMenu();
+            fanActivated = false;
+        } else {
+            mMenu.setVisibility(View.VISIBLE);
+            mMenu.showMenu();
+            fanActivated = true;
         }
     }
 
