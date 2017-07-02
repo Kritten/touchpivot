@@ -42,9 +42,6 @@
             android:layout_height="match_parent"
             android:text="Hello test!" />
 
-
-
-
     </RelativeLayout>
 
 
