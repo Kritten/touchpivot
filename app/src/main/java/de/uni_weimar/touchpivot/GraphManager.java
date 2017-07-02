@@ -28,7 +28,9 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 import com.github.mikephil.charting.listener.OnChartGestureListener;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by micro on 24.06.2017.
@@ -36,30 +38,52 @@ import java.util.List;
 
 class GraphManager implements OnChartGestureListener {
     private Activity activity = null;
+    private DataManager dataManager = null;
     private List<ChartItem> listHistory = new ArrayList<>();
     private ChartItem currentChart = null;
     private List<Class> listChartTypes = new ArrayList<>();
 
-    public GraphManager(Activity activity) {
+    public GraphManager(Activity activity, DataManager dataManager) {
         this.activity = activity;
+        this.dataManager = dataManager;
+
 //        listChartTypes.add(PieChart.class);
         listChartTypes.add(BarChart.class);
         listChartTypes.add(LineChart.class);
+
+        renderInitialState();
     }
 
-    public void showStats(DataManager dataManager) {
+    private void renderInitialState() {
+        this.showStats();
+
+        List<Entry> entries = new ArrayList<>();
+        int counter = 0;
+        for(String column: this.dataManager.getColumns()) {
+            Set<String> set = new HashSet<>();
+            for(String value: this.dataManager.getColumn(column)) {
+                set.add(value);
+            }
+            entries.add(new Entry(counter, set.size()));
+            counter += 1;
+        }
+
+        this.addGraph(entries, BarChart.class, Location.Bottom, this.dataManager.getColumns());
+    }
+
+    private void showStats() {
         TextView textViewCountRows = (TextView) activity.findViewById(R.id.textview_count_rows);
-        textViewCountRows.setText(Integer.toString(dataManager.getCountItems()));
+        textViewCountRows.setText(Integer.toString(this.dataManager.getCountItems()));
 
         TextView textViewCountColumns = (TextView) activity.findViewById(R.id.textview_count_columns);
-        textViewCountColumns.setText(Integer.toString(dataManager.getCountColumns()));
+        textViewCountColumns.setText(Integer.toString(this.dataManager.getCountColumns()));
     }
 
     public Chart getCurrentChart() {
         return currentChart.chart;
     }
 
-    public void renderGraphBottom(List<Entry> entries, final List<String> labels, Class chartType) {
+    public void addGraph(List<Entry> entries, Class chartType, Location location, final List<String> labels) {
         Chart chart = null;
         switch (chartType.getSimpleName()) {
             case "BarChart":
@@ -76,7 +100,23 @@ class GraphManager implements OnChartGestureListener {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         chart.setLayoutParams(params);
 
-        RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+
+        RelativeLayout layout;
+        if(location == null) {
+            location = Location.Bottom;
+        }
+        switch(location) {
+            case Top:
+                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
+                break;
+            case Bottom:
+                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+                break;
+            default:
+                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+                break;
+        }
+
         layout.addView(chart);
         chart.setOnChartGestureListener(this);
         chart.getLegend().setEnabled(false);
@@ -173,13 +213,6 @@ class GraphManager implements OnChartGestureListener {
         return chart;
     }
 
-    public void renderGraphBottom(List<Entry> entries) {
-        this.renderGraphBottom(entries, null, BarChart.class);
-    }
-    public void renderGraphBottom(List<Entry> entries, ArrayList<String> labels) {
-        this.renderGraphBottom(entries, labels, BarChart.class);
-    }
-
     @Override
     public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
     }
@@ -206,7 +239,6 @@ class GraphManager implements OnChartGestureListener {
     @Override
     public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
 //        System.out.println(Float.toString(velocityX)+" "+ Float.toString(velocityY));
-//        Toast.makeText(activity, Float.toString(velocityX)+" "+ Float.toString(velocityY), Toast.LENGTH_SHORT).show();
 //        horizontal swipe
         if(Math.abs(velocityX) > Math.abs(velocityY)) {
             if(velocityX < 0.0) {
@@ -215,7 +247,21 @@ class GraphManager implements OnChartGestureListener {
                 this.previousLayout();
             }
         } else {
+            if(velocityY < 0.0) {
+                this.goBackInHistory();
+            } else {
+                this.goForwardInHistory();
+            }
+//        graphManger.getCurrentChart().setOnClickListener(new CustomClickListener(this));
         }
+    }
+
+    private void goBackInHistory() {
+        System.out.println("go back");
+    }
+
+    private void goForwardInHistory() {
+        System.out.println("go forward");
     }
 
     private void nextLayout() {
@@ -226,7 +272,7 @@ class GraphManager implements OnChartGestureListener {
         if(++index == listChartTypes.size()) {
             index = 0;
         }
-        this.renderGraphBottom(currentChart.entries, currentChart.columns, listChartTypes.get(index));
+        this.addGraph(currentChart.entries, listChartTypes.get(index), null, currentChart.columns);
     }
     private void previousLayout() {
         Class chartType = currentChart.chartType;
@@ -235,7 +281,7 @@ class GraphManager implements OnChartGestureListener {
         if(--index == - 1) {
             index = listChartTypes.size() - 1;
         }
-        this.renderGraphBottom(currentChart.entries, currentChart.columns, listChartTypes.get(index));
+        this.addGraph(currentChart.entries, listChartTypes.get(index), null, currentChart.columns);
     }
 
     @Override
@@ -245,6 +291,10 @@ class GraphManager implements OnChartGestureListener {
 
     @Override
     public void onChartTranslate(MotionEvent me, float dX, float dY) {
+    }
+
+    public enum Location {
+        Top, Bottom
     }
 
     private class ChartItem {
