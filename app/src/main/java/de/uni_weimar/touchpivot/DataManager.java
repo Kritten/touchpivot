@@ -1,24 +1,22 @@
 package de.uni_weimar.touchpivot;
 
 import android.app.Activity;
-import android.content.Context;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.content.res.Resources;
 
+import com.github.mikephil.charting.data.Entry;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * Created by micro on 22.06.2017.
@@ -28,6 +26,7 @@ public class DataManager {
     private Resources resources;
     private Activity activity = null;
     private ArrayList<JSONObject> list_data_items = new ArrayList<>();
+    private ArrayList<String> list_columns = new ArrayList<>();
 
     public DataManager(MainActivity mainActivity) {
         activity = mainActivity;
@@ -37,13 +36,13 @@ public class DataManager {
     /*
         This function takes an item and appends it to the list of items
      */
-    public void add_item(JSONObject obj) {
+    public void addItem(JSONObject obj) {
         list_data_items.add(obj);
     }
     /*
         This function returrns the current size of the list
      */
-    public int size() {
+    public int getCountItems() {
         return list_data_items.size();
     }
     /*
@@ -53,27 +52,50 @@ public class DataManager {
         return list_data_items;
     }
     /*
+        This function returns the number of columns
+     */
+    public int getCountColumns() {
+        return list_columns.size();
+    }
+    public ArrayList<String> getColumn(String column) {
+        ArrayList<String> result = new ArrayList<>();
+        for(JSONObject item: this.get_items()) {
+            try {
+                result.add(item.getString(column));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        return result;
+    }
+    /*
+        This function returns all items
+     */
+    public ArrayList<String> getColumns() {
+        return list_columns;
+    }
+    /*
         This function loads the data and initializes the adapter.
      */
     private void init() {
-        this.load_data_items();
-        ListView dataTable  = (ListView)activity.findViewById(R.id.dataTable);
-        DataArrayAdapter adapter = new DataArrayAdapter(activity, get_items());
+        this.loadDataItems();
+        ListView dataTable = (ListView)activity.findViewById(R.id.dataTable);
+        DataArrayAdapter adapter = new DataArrayAdapter(activity, this);
         dataTable.setAdapter(adapter);
     }
     /*
         This function loads the data from the file and adds each item to the list
      */
-    private void load_data_items() {
+    private void loadDataItems() {
         try {
-            System.out.println(new InputStreamReader(resources.openRawResource(R.raw.file_short)));
-            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.file_short)));
+            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.exported_data)));
+//            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.file_short)));
             for(String line; (line = br.readLine()) != null; ) {
                 JSONObject obj = new JSONObject(line);
-                this.add_item(obj);
-                this.add_item(obj);
-                this.add_item(obj);
-                this.add_item(obj);
+                this.addItem(obj);
+                this.addItem(obj);
+                this.addItem(obj);
+                this.addItem(obj);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -82,51 +104,19 @@ public class DataManager {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-    }
 
-    private class DataArrayAdapter extends ArrayAdapter<JSONObject> {
+        if(list_data_items.size() > 0) {
+            JSONObject obj = list_data_items.get(0);
+            JSONArray columns = obj.names();
 
-        public DataArrayAdapter(Context context, ArrayList<JSONObject> objects) {
-            super(context, 0, objects);
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            // Get the data item for this position
-            JSONObject dataItem = getItem(position);
-            // Check if an existing view is being reused, otherwise inflate the view
-            if (convertView == null) {
-                convertView = LayoutInflater.from(getContext()).inflate(R.layout.data_item, parent, false);
+            for(int i = 0; i < columns.length(); i++){
+                try {
+                    list_columns.add(columns.getString(i));
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
             }
-            // Lookup view for data population
-            TextView textViewID = (TextView) convertView.findViewById(R.id.textViewID);
-            TextView textViewName = (TextView) convertView.findViewById(R.id.textViewName);
-            TextView textViewCount = (TextView) convertView.findViewById(R.id.textViewCount);
-//            TextView tvHome = (TextView) convertView.findViewById(R.id.tvHome);
-            // Populate the data into the template view using the data object
-            try {
-                textViewID.setText(dataItem.getString("id"));
-                textViewName.setText(dataItem.getString("name"));
-                textViewCount.setText(dataItem.getString("count_of_something"));
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            // Return the completed view to render on screen
-            return convertView;
+            Collections.sort(list_columns);
         }
     }
 }
-
-//        try {
-//            FileOutputStream fileout=openFileOutput("mytextfile.txt", MODE_PRIVATE);
-//            OutputStreamWriter outputWriter=new OutputStreamWriter(fileout);
-//            outputWriter.write("kritten");
-//            outputWriter.close();
-//
-//            //display file saved message
-//            Toast.makeText(getBaseContext(), "File saved successfully!",
-//                    Toast.LENGTH_SHORT).show();
-//
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
