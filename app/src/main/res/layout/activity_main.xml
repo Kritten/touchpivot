@@ -23,54 +23,32 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
-        <Button
-            android:id="@+id/fab"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="8dp"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/path_fab"
-            android:text="+"
-            android:textColor="@android:color/holo_green_light"
-            android:textSize="24sp" />
-
-        <FrameLayout
-            android:id="@+id/menu_layout"
+        <com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenu
+            android:id="@+id/radial_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/scrim"
-            android:visibility="invisible">
+            android:padding="5dp"/>
 
-            <com.ogaclejapan.arclayout.ArcLayout
-                android:id="@+id/arc_layout"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginBottom="32dp"
-                app:arc_axisRadius="@dimen/layout_child_offset_path"
-                app:arc_freeAngle="true"
+    </RelativeLayout>
 
-                app:arc_color="#4D000000"
-                app:arc_origin="bottom|left"
-                app:arc_radius="@dimen/layout_radius_path">
+    <RelativeLayout
+        android:id="@+id/right_side"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
 
-                <Button
-                    android:id="@+id/arc_item"
-                    style="@style/Item.Path"
-                    android:text="A"
-                    android:textColor="@color/path_orange"
-                    app:arc_angle="30" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:text="Hello test!" />
 
-            </com.ogaclejapan.arclayout.ArcLayout>
-        </FrameLayout>
+
+
 
     </RelativeLayout>
 
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:text="Hello test!" />
+
+
 
 </LinearLayout >
