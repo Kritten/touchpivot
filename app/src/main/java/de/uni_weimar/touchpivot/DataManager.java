@@ -82,6 +82,7 @@ public class DataManager {
         ListView dataTable = (ListView)activity.findViewById(R.id.dataTable);
         DataArrayAdapter adapter = new DataArrayAdapter(activity, this);
         dataTable.setAdapter(adapter);
+        dataTable.setDivider(null);
     }
     /*
         This function loads the data from the file and adds each item to the list

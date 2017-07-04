@@ -100,7 +100,7 @@ public class MainActivity extends AppCompatActivity{
                 if (j == idx) {
                     row.getChildAt(j).setBackgroundColor(Color.WHITE);
                 } else {
-                    row.getChildAt(j).setBackgroundColor(Color.GRAY);
+                    row.getChildAt(j).setBackgroundColor(getResources().getColor(R.color.highlight_grey));
                 }
             }
         }
@@ -149,7 +149,8 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public void onMenuItemPressed() {
-            Toast.makeText(MainActivity.this, this.name, Toast.LENGTH_SHORT).show();
+            highlightHover(name);
+            setPivotColumn(name);
         }
     }
 

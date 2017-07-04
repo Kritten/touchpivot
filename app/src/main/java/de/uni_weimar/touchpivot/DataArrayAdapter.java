@@ -40,7 +40,7 @@ public class DataArrayAdapter extends ArrayAdapter<JSONObject> {
                 int id = TextView.generateViewId();
                 textView.setId(id);
 //                TableLayout.LayoutParams lparams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
-                TableLayout.LayoutParams lparams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1);
+                TableLayout.LayoutParams lparams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.MATCH_PARENT, 1);
                 textView.setLayoutParams(lparams);
                 layoutColumn.addView(textView);
                 mapColumns.put(column, textView);

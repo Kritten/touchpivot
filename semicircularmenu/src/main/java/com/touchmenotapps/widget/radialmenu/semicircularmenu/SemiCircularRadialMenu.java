@@ -169,7 +169,17 @@ public class SemiCircularRadialMenu extends View {
 						if(mMenuRect.contains((int) x, (int) y))
 							if(item.getBounds().contains((int) x, (int) y)) {
 								isMenuItemPressed = true;
-								mPressedMenuItemID = item.getMenuID();
+                                if (mPressedMenuItemID == item.getMenuID()) {
+                                    changedHoveredMenuItem = false;
+                                } else {
+                                    mPressedMenuItemID = item.getMenuID();
+                                    changedHoveredMenuItem = true;
+                                }
+                                if (changedHoveredMenuItem) {
+                                    if(item.getHoverCallback() != null) {
+                                        item.getHoverCallback().onMenuItemHovered();
+                                    }
+                                }
                                 invalidate();
 								return true;
 							}
