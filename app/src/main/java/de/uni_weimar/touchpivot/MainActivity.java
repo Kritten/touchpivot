@@ -1,31 +1,17 @@
 package de.uni_weimar.touchpivot;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
-import android.app.Activity;
-import android.graphics.Rect;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.ViewTreeObserver;
-import android.view.animation.DecelerateInterpolator;
-import android.view.animation.TranslateAnimation;
-import android.widget.AdapterView;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.Entry;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,7 +30,29 @@ public class MainActivity extends AppCompatActivity {
 //        create the graph manager displays the data)
         graphManger = new GraphManager(this, dataManager);
 
-//        graphManger.renderGraphBottom(entries, dataManager.getColumns());
-//        graphManger.getCurrentChart().setOnClickListener(new CustomClickListener(this));
+        System.out.println(dataManager.getColumns());
+
+        ArrayList<String> listPivotColumn = dataManager.getColumn("annotatorA");
+        List<Entry> entries = new ArrayList<>();
+
+         Map<String, Integer> map = new HashMap<>();
+        for(String value: listPivotColumn) {
+            if(map.containsKey(value)) {
+                map.put(value, map.get(value) + 1);
+            } else {
+                map.put(value, 1);
+            }
+        }
+
+        System.out.println(map);
+        int counter = 0;
+        List<String> labels = new ArrayList<>();
+        for(Map.Entry<String, Integer> value: map.entrySet()) {
+            labels.add(value.getKey());
+            entries.add(new Entry(counter, value.getValue()));
+            counter += 1;
+        }
+        graphManger.addGraph(entries, BarChart.class, GraphManager.Location.Bottom, labels, true);
+
     }
 }

@@ -3,6 +3,9 @@ package de.uni_weimar.touchpivot;
 import android.app.Activity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -36,10 +39,11 @@ import java.util.Set;
  * Created by micro on 24.06.2017.
  */
 
-class GraphManager implements OnChartGestureListener {
+class GraphManager {
     private Activity activity = null;
     private DataManager dataManager = null;
     private List<ChartItem> listHistory = new ArrayList<>();
+    private int historyCurrentState = -1;
     private ChartItem currentChart = null;
     private List<Class> listChartTypes = new ArrayList<>();
 
@@ -68,7 +72,8 @@ class GraphManager implements OnChartGestureListener {
             counter += 1;
         }
 
-        this.addGraph(entries, BarChart.class, Location.Bottom, this.dataManager.getColumns());
+        ChartItem chartItem = this.addGraph(entries, BarChart.class, Location.Bottom , this.dataManager.getColumns(), false);
+        chartItem.chart.setOnTouchListener(null);
     }
 
     private void showStats() {
@@ -83,7 +88,7 @@ class GraphManager implements OnChartGestureListener {
         return currentChart.chart;
     }
 
-    public void addGraph(List<Entry> entries, Class chartType, Location location, final List<String> labels) {
+    public ChartItem addGraph(List<Entry> entries, Class chartType, Location location, final List<String> labels, boolean addToHistory) {
         Chart chart = null;
         switch (chartType.getSimpleName()) {
             case "BarChart":
@@ -116,9 +121,8 @@ class GraphManager implements OnChartGestureListener {
                 layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
                 break;
         }
-
         layout.addView(chart);
-        chart.setOnChartGestureListener(this);
+
         chart.getLegend().setEnabled(false);
         chart.setDescription(null);
 
@@ -128,10 +132,17 @@ class GraphManager implements OnChartGestureListener {
             currentChart.chart.setVisibility(View.GONE);
         }
 
-        ChartItem chartItem = new ChartItem(chart, chartType, entries, labels);
+        ChartItem chartItem = new ChartItem(chart, chartType, entries, labels, location);
         currentChart = chartItem;
 
-        listHistory.add(chartItem);
+        if(addToHistory) {
+            listHistory.add(chartItem);
+        }
+
+
+//        chartItem.chart.setOnChartGestureListener(new CustomChartListener(chartItem, this));
+        chartItem.chart.setOnTouchListener(new CustomChartTouchListener(chartItem, this));
+        return chartItem;
     }
 
     private Chart createPieChart(List<Entry> entries) {
@@ -213,101 +224,166 @@ class GraphManager implements OnChartGestureListener {
         return chart;
     }
 
-    @Override
-    public void onChartGestureStart(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-    }
-
-
-    @Override
-    public void onChartGestureEnd(MotionEvent me, ChartTouchListener.ChartGesture lastPerformedGesture) {
-    }
-
-    @Override
-    public void onChartLongPressed(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartDoubleTapped(MotionEvent me) {
-
-    }
-
-    @Override
-    public void onChartSingleTapped(MotionEvent me) {
-    }
-
-    @Override
-    public void onChartFling(MotionEvent me1, MotionEvent me2, float velocityX, float velocityY) {
-//        System.out.println(Float.toString(velocityX)+" "+ Float.toString(velocityY));
-//        horizontal swipe
-        if(Math.abs(velocityX) > Math.abs(velocityY)) {
-            if(velocityX < 0.0) {
-                this.nextLayout();
-            } else {
-                this.previousLayout();
+    public void goBackInHistory(ChartItem chartItem) {
+        System.out.println("go back");
+        if(chartItem.location == Location.Top) {
+            if(historyCurrentState == 0) {
+                return;
             }
-        } else {
-            if(velocityY < 0.0) {
-                this.goBackInHistory();
-            } else {
-                this.goForwardInHistory();
-            }
-//        graphManger.getCurrentChart().setOnClickListener(new CustomClickListener(this));
+
+            historyCurrentState -= 1;
+            ChartItem chartItemOld = listHistory.get(historyCurrentState);
+
+            chartItem.location = Location.Bottom;
+
+            final View srcView  = chartItem.chart;
+//        final TextView srcView  = (TextView) activity.findViewById(R.id.textView);
+            final RelativeLayout destContainer  = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+            final LinearLayout rootView  = (LinearLayout) activity.findViewById(R.id.rootView);
+
+            final float position_y = getAbsY( srcView );
+
+            RelativeLayout parent = (RelativeLayout) srcView.getParent();
+            parent.removeView(srcView);
+
+            int dpi = (int) (50 * activity.getResources().getDisplayMetrics().density);
+//        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(dpi, dpi);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+//        lparams.setMargins(0,(int) (10 * activity.getResources().getDisplayMetrics().density),0,0);
+            srcView.setLayoutParams(params);
+//        destView.setBackgroundColor(activity.getResources().getColor(android.R.color.holo_blue_bright));
+            destContainer.addView(srcView);
+
+            final ViewTreeObserver observer = srcView.getViewTreeObserver();
+
+            observer.addOnPreDrawListener( new ViewTreeObserver.OnPreDrawListener() {
+                                               @Override
+                                               public boolean onPreDraw() {
+                                                   observer.removeOnPreDrawListener( this );
+                                                   srcView.setTranslationY(  position_y - getAbsY( srcView ));
+                                                   rootView.getOverlay().add( srcView );
+                                                   srcView.animate().translationX( 0 ).translationY( 0 )
+                                                           .setInterpolator( new DecelerateInterpolator( 2 ) )
+                                                           .setDuration( 300 )
+                                                           .withEndAction( new Runnable() {
+                                                               @Override
+                                                               public void run() {
+                                                                   rootView.getOverlay().remove( srcView );
+                                                                   destContainer.addView( srcView );
+                                                               }
+                                                           } );
+                                                   return true;
+                                               }
+                                           }
+            );
         }
     }
 
-    private void goBackInHistory() {
-        System.out.println("go back");
-    }
-
-    private void goForwardInHistory() {
+    public void goForwardInHistory(ChartItem chartItem) {
         System.out.println("go forward");
+
+        if(chartItem.location == Location.Bottom) {
+            if(historyCurrentState == listHistory.size() - 1) {
+                return;
+            }
+
+            historyCurrentState += 1;
+            ChartItem chartItemOld = listHistory.get(historyCurrentState);
+
+            chartItem.location = Location.Top;
+
+            final Chart srcView  = chartItem.chart;
+//        final TextView srcView  = (TextView) activity.findViewById(R.id.textView);
+            final RelativeLayout destContainer  = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
+            final LinearLayout rootView  = (LinearLayout) activity.findViewById(R.id.rootView);
+
+            final float position_y = getAbsY( srcView );
+
+            RelativeLayout parent = (RelativeLayout) srcView.getParent();
+            srcView.setOnChartGestureListener(null);
+//            System.out.println(parent);
+                parent.removeView(srcView);
+//
+            int dpi = (int) (50 * activity.getResources().getDisplayMetrics().density);
+        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(dpi, dpi);
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
+//        lparams.setMargins(0,(int) (10 * activity.getResources().getDisplayMetrics().density),0,0);
+            srcView.setLayoutParams(params);
+//        destView.setBackgroundColor(activity.getResources().getColor(android.R.color.holo_blue_bright));
+            destContainer.addView(srcView);
+
+            final ViewTreeObserver observer = srcView.getViewTreeObserver();
+
+            observer.addOnPreDrawListener( new ViewTreeObserver.OnPreDrawListener() {
+                                               @Override
+                                               public boolean onPreDraw() {
+                                                   observer.removeOnPreDrawListener( this );
+                                                   srcView.setTranslationY(  position_y - getAbsY( srcView ));
+                                                   rootView.getOverlay().add( srcView );
+                                                   srcView.animate().translationX( 0 ).translationY( 0 )
+                                                           .setInterpolator( new DecelerateInterpolator( 2 ) )
+                                                           .setDuration( 300 )
+                                                           .withEndAction( new Runnable() {
+                                                               @Override
+                                                               public void run() {
+                                                                   rootView.getOverlay().remove( srcView );
+                                                                   destContainer.addView( srcView );
+                                                               }
+                                                           } );
+                                                   return true;
+                                               }
+                                           }
+            );
+        }
     }
 
-    private void nextLayout() {
-        Class chartType = currentChart.chartType;
+    public void nextLayout(ChartItem chartItem) {
+        Class chartType = chartItem.chartType;
 //         Toast.makeText(activity, "next", Toast.LENGTH_SHORT).show();
 
         int index = listChartTypes.indexOf(chartType);
         if(++index == listChartTypes.size()) {
             index = 0;
         }
-        this.addGraph(currentChart.entries, listChartTypes.get(index), null, currentChart.columns);
+        this.addGraph(chartItem.entries, listChartTypes.get(index), chartItem.location, chartItem.columns, false);
     }
-    private void previousLayout() {
-        Class chartType = currentChart.chartType;
+    public void previousLayout(ChartItem chartItem) {
+        Class chartType = chartItem.chartType;
 //        Toast.makeText(activity, "previous", Toast.LENGTH_SHORT).show();
         int index = listChartTypes.indexOf(chartType);
         if(--index == - 1) {
             index = listChartTypes.size() - 1;
         }
-        this.addGraph(currentChart.entries, listChartTypes.get(index), null, currentChart.columns);
+        this.addGraph(chartItem.entries, listChartTypes.get(index), chartItem.location, chartItem.columns, false);
     }
 
-    @Override
-    public void onChartScale(MotionEvent me, float scaleX, float scaleY) {
-
-    }
-
-    @Override
-    public void onChartTranslate(MotionEvent me, float dX, float dY) {
+    private float getAbsY( View view ) {
+        if( view.getParent() == view.getRootView() ) {
+            return view.getY();
+        } else {
+            return view.getY() + getAbsY( ( View )view.getParent() );
+        }
     }
 
     public enum Location {
         Top, Bottom
     }
 
-    private class ChartItem {
+    public class ChartItem {
         public Chart chart;
         public Class chartType;
         public List<Entry> entries;
         public List<String> columns;
+        public Location location;
 
-        public ChartItem(Chart chart, Class<BarChart> chartType, List<Entry> entries, List<String> columns) {
+        public ChartItem(Chart chart, Class<BarChart> chartType, List<Entry> entries, List<String> columns, Location location) {
             this.chart = chart;
             this.chartType = chartType;
             this.entries = entries;
             this.columns = columns;
+            this.location = location;
         }
     }
 }

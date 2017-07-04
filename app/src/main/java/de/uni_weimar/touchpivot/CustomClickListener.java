@@ -16,7 +16,7 @@ import android.widget.TextView;
 public class CustomClickListener implements View.OnClickListener {
     private final Activity activity;
 
-    public CustomClickListener(MainActivity activity) {
+    public CustomClickListener(Activity activity) {
         this.activity = activity;
     }
 
