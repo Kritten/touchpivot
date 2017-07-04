@@ -6,6 +6,8 @@ import android.graphics.Point;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 
+import com.touchmenotapps.widget.radialmenu.RadialMenuColors;
+
 public class SemiCircularRadialMenuItem {
 
 	private String mMenuID;
@@ -38,10 +40,10 @@ public class SemiCircularRadialMenuItem {
 		this.mMenuID = id;
 		this.mIcon = mIcon;
 		this.mText = mText;
-		this.mMenuNormalColor = R.color.transparent_white;
+//		this.mMenuNormalColor = R.color.my_red;
 //		this.mMenuSelectedColor = R.color.transparent_grey;
-//        this.mMenuNormalColor = Color.WHITE;
-		this.mMenuSelectedColor = R.color.my_grey;
+        this.mMenuNormalColor = RadialMenuColors.trans;
+		this.mMenuSelectedColor = RadialMenuColors.selected;
 //		this.mMenuSelectedColor = Color.LTGRAY;
 		this.mBackgroundColor = mMenuNormalColor;
 		this.mTextColor = Color.BLACK;

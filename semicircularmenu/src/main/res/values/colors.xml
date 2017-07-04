@@ -5,4 +5,9 @@
     <color name="transparent_grey">#cccccc</color>
     <color name="my_grey">#cccccc</color>
     <color name="semi_transparent_grey">#CCDDDDDD</color>
+    <color name="white">#ffffff</color>
+
+    <color name="blue">#0000ff</color>
+    <color name="trans">#8000ffff</color>
+
 </resources>

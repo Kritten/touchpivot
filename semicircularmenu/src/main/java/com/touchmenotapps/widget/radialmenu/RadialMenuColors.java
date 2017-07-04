@@ -22,6 +22,13 @@ package com.touchmenotapps.widget.radialmenu;
  */
 public class RadialMenuColors {
 //	public static final int HOLO_LIGHT_BLUE = 0xff33b5e5;
+
+	public static final int white = 0xffffffff;
+	public static final int black = 0xff000000;
+    public static final int trans = 0x99ffffff;
+    public static final int selected = 0x99ddddee;
+    public static final int red = 0xffff0000;
+    public static final int full_trans = 0x00000000;
 	public static final int HOLO_DARK_BLUE = 0xff0099cc;
 	public static final int HOLO_LIGHT_PURPLE = 0xffaa66cc;
 	public static final int HOLO_DARK_PURPLE = 0xff9933cc;

@@ -68,19 +68,18 @@ public class SemiCircularRadialMenu extends View {
 	private boolean isShowMenuText = false;	
 	private int mOrientation = HORIZONTAL_BOTTOM;
 
-	private int centerRadialColor = R.color.transparent_white;
+//	private int centerRadialColor = R.color.trans;
 //	private int mShadowColor = R.color.transparent_white;
 
-//    private int centerRadialColor = Color.WHITE;
-    private int mShadowColor = Color.WHITE;
+//	private int centerRadialColor = Color.WHITE;
+	private int centerRadialColor = RadialMenuColors.trans;
+    private int mShadowColor = RadialMenuColors.trans;
 
 	private String openMenuText = "Open";
 	private String closeMenuText = "Close";
 	private String centerMenuText = openMenuText;	//Not to be set using setter method
 
-	private int mToggleMenuTextColor = Color.TRANSPARENT;
-//	private int mToggleMenuTextColor = R.color.transparent_white;
-//	private int mToggleMenuTextColor = Color.DKGRAY;
+	private int mToggleMenuTextColor = RadialMenuColors.black;
 
 	private float textSize = 12 * getResources().getDisplayMetrics().density;
 	private int mOpenButtonScaleFactor = 3;
@@ -102,8 +101,9 @@ public class SemiCircularRadialMenu extends View {
 	}
 	
 	private void init() {
-		mRadialMenuPaint.setTextSize(textSize);
-		mRadialMenuPaint.setColor(Color.WHITE);
+        this.setBackgroundColor(RadialMenuColors.full_trans);
+        mRadialMenuPaint.setTextSize(textSize);
+		mRadialMenuPaint.setColor(RadialMenuColors.full_trans);
 		//mRadialMenuPaint.setColor(Color.TRANSPARENT);
 //		mRadialMenuPaint.setColor(Color.WHITE);
 	}
@@ -111,7 +111,10 @@ public class SemiCircularRadialMenu extends View {
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
-		mRadialMenuPaint.setShadowLayer(mShadowRadius, 0.0f, 0.0f, mShadowColor);  
+        this.setBackgroundColor(RadialMenuColors.full_trans);
+        canvas.drawColor(RadialMenuColors.full_trans);
+        mRadialMenuPaint.setColor(RadialMenuColors.full_trans);
+		mRadialMenuPaint.setShadowLayer(mShadowRadius, 0.0f, 0.0f, RadialMenuColors.trans);
 		//Draw the menu if the menu is to be displayed.
 		if(isMenuVisible) {
 			canvas.drawArc(mMenuRect, mStartAngle, 180, true, mRadialMenuPaint);
@@ -135,11 +138,12 @@ public class SemiCircularRadialMenu extends View {
 						mRadialMenuPaint.setShadowLayer(mShadowRadius, 0.0f, 0.0f, Color.TRANSPARENT);  
 						mRadialMenuPaint.setColor(item.getTextColor());
 						canvas.drawTextOnPath(item.getText(), item.getMenuPath(), 5, textSize, mRadialMenuPaint);
-						mRadialMenuPaint.setShadowLayer(mShadowRadius, 0.0f, 0.0f, mShadowColor);
+						mRadialMenuPaint.setShadowLayer(mShadowRadius, 0.0f, 0.0f,  Color.TRANSPARENT);
 					}
 					item.getIcon().draw(canvas);
 					mStart += mSweep;
 				}
+				mRadialMenuPaint.setARGB(0,0,0,0);
 				mRadialMenuPaint.setStyle(Style.FILL);
 			}
 		}
@@ -159,7 +163,7 @@ public class SemiCircularRadialMenu extends View {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			if(mMenuCenterButtonRect.contains(x, y)) {
-				centerRadialColor = R.color.my_red;
+				centerRadialColor = RadialMenuColors.trans;
 //				centerRadialColor = RadialMenuColors.HOLO_LIGHT_BLUE;
 				isMenuTogglePressed = true;
 				invalidate();
@@ -227,7 +231,7 @@ public class SemiCircularRadialMenu extends View {
             break;
 		case MotionEvent.ACTION_UP:
 			if(isMenuTogglePressed) {
-				centerRadialColor = Color.WHITE;
+				centerRadialColor = RadialMenuColors.trans;
 				if(isMenuVisible) {
 					isMenuVisible = false;
 					centerMenuText = openMenuText;
