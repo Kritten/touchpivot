@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         dataTable = (ListView) findViewById(R.id.dataTable);
+        dataTable.getChildCount()
+                dataTable.getchildat
 //        create the data manager (loads the data)
         dataManager = new DataManager(this);
 //        create the graph manager displays the data)
@@ -53,10 +55,18 @@ public class MainActivity extends AppCompatActivity{
 
         System.out.println(dataManager.getColumns());
 
-        ArrayList<String> listPivotColumn = dataManager.getColumn("annotatorA");
+
+
+//        graphManger.renderGraphBottom(entries);
+//        graphManger.renderGraphBottom(entries, dataManager.getColumns());
+
+    }
+
+    private void setPivotColumn(String column) {
+        ArrayList<String> listPivotColumn = dataManager.getColumn(column);
         List<Entry> entries = new ArrayList<>();
 
-         Map<String, Integer> map = new HashMap<>();
+        Map<String, Integer> map = new HashMap<>();
         for(String value: listPivotColumn) {
             if(map.containsKey(value)) {
                 map.put(value, map.get(value) + 1);
@@ -74,10 +84,6 @@ public class MainActivity extends AppCompatActivity{
             counter += 1;
         }
         graphManger.addGraph(entries, BarChart.class, GraphManager.Location.Bottom, labels, true);
-
-//        graphManger.renderGraphBottom(entries);
-//        graphManger.renderGraphBottom(entries, dataManager.getColumns());
-
     }
 
     private void initFanMenu(ArrayList<String> columns) {
@@ -137,7 +143,9 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public void onMenuItemHovered() {
-            Toast.makeText(MainActivity.this, "hov "+this.name, Toast.LENGTH_SHORT).show();
+            setPivotColumn(name);
+
+//            Toast.makeText(MainActivity.this, "hov "+this.name, Toast.LENGTH_SHORT).show();
         }
     }
 
