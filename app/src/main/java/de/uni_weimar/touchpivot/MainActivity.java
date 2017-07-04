@@ -1,35 +1,22 @@
 package de.uni_weimar.touchpivot;
 
-
-import android.support.v4.app.FragmentActivity;
-
 import android.os.Bundle;
-
-import android.view.LayoutInflater;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.Toast;
 
-import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.widget.ListView;
-
-import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.Entry;
 import com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenu;
 import com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenuItem;
 
-
-import android.widget.RelativeLayout;
-import android.widget.Toast;
-
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-
-
-
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity{
     private DataManager dataManager = null;
@@ -48,8 +35,10 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         dataTable = (ListView) findViewById(R.id.dataTable);
-        // create the data manager (loads the data and displays it)
+//        create the data manager (loads the data)
         dataManager = new DataManager(this);
+//        create the graph manager displays the data)
+        graphManger = new GraphManager(this, dataManager);
 
         // init fan menu
         dataView = (RelativeLayout) findViewById(R.id.data_view);
@@ -62,24 +51,32 @@ public class MainActivity extends AppCompatActivity{
         });
         initFanMenu(dataManager.getColumns());
 
-        graphManger = new GraphManager(this);
+        System.out.println(dataManager.getColumns());
 
-        graphManger.showStats(dataManager);
+        ArrayList<String> listPivotColumn = dataManager.getColumn("annotatorA");
+        List<Entry> entries = new ArrayList<>();
 
-//        List<List<Entry>> data = new ArrayList<>();
-        List<BarEntry> entries = new ArrayList<>();
-        int counter = 0;
-        for(String column: dataManager.getColumns()) {
-            Set<String> set = new HashSet<>();
-            for(String value: dataManager.getColumn(column)) {
-                set.add(value);
+         Map<String, Integer> map = new HashMap<>();
+        for(String value: listPivotColumn) {
+            if(map.containsKey(value)) {
+                map.put(value, map.get(value) + 1);
+            } else {
+                map.put(value, 1);
             }
-            entries.add(new BarEntry(counter, set.size()));
-            counter += 1;
         }
 
+        System.out.println(map);
+        int counter = 0;
+        List<String> labels = new ArrayList<>();
+        for(Map.Entry<String, Integer> value: map.entrySet()) {
+            labels.add(value.getKey());
+            entries.add(new Entry(counter, value.getValue()));
+            counter += 1;
+        }
+        graphManger.addGraph(entries, BarChart.class, GraphManager.Location.Bottom, labels, true);
+
 //        graphManger.renderGraphBottom(entries);
-        graphManger.renderGraphBottom(entries, dataManager.getColumns());
+//        graphManger.renderGraphBottom(entries, dataManager.getColumns());
 
     }
 

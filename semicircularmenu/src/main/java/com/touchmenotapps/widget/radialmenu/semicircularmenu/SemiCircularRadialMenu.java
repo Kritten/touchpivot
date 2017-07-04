@@ -63,17 +63,22 @@ public class SemiCircularRadialMenu extends View {
 	//Variables that can be user defined	
 	private float mShadowRadius = 5 * getResources().getDisplayMetrics().density;	
 	private boolean isShowMenuText = false;	
-	private int mOrientation = HORIZONTAL_BOTTOM;	
+	private int mOrientation = HORIZONTAL_BOTTOM;
+
 	private int centerRadialColor = R.color.transparent_white;
-	private int mShadowColor = R.color.transparent_white;
+//	private int mShadowColor = R.color.transparent_white;
+
 //    private int centerRadialColor = Color.WHITE;
-//    private int mShadowColor = Color.GRAY;
+    private int mShadowColor = Color.WHITE;
+
 	private String openMenuText = "Open";
 	private String closeMenuText = "Close";
 	private String centerMenuText = openMenuText;	//Not to be set using setter method
-//	private int mToggleMenuTextColor = Color.TRANSPARENT;
-	private int mToggleMenuTextColor = R.color.transparent_white;
+
+	private int mToggleMenuTextColor = Color.TRANSPARENT;
+//	private int mToggleMenuTextColor = R.color.transparent_white;
 //	private int mToggleMenuTextColor = Color.DKGRAY;
+
 	private float textSize = 12 * getResources().getDisplayMetrics().density;
 	private int mOpenButtonScaleFactor = 3;
 		
@@ -95,7 +100,8 @@ public class SemiCircularRadialMenu extends View {
 	
 	private void init() {
 		mRadialMenuPaint.setTextSize(textSize);
-		mRadialMenuPaint.setColor(Color.TRANSPARENT);
+		mRadialMenuPaint.setColor(Color.WHITE);
+		//mRadialMenuPaint.setColor(Color.TRANSPARENT);
 //		mRadialMenuPaint.setColor(Color.WHITE);
 	}
 	
@@ -148,7 +154,8 @@ public class SemiCircularRadialMenu extends View {
 		switch (event.getAction()) {
 		case MotionEvent.ACTION_DOWN:
 			if(mMenuCenterButtonRect.contains(x, y)) {
-				centerRadialColor = RadialMenuColors.HOLO_LIGHT_BLUE;
+				centerRadialColor = R.color.my_red;
+//				centerRadialColor = RadialMenuColors.HOLO_LIGHT_BLUE;
 				isMenuTogglePressed = true;
 				invalidate();
 			} else if(isMenuVisible) {

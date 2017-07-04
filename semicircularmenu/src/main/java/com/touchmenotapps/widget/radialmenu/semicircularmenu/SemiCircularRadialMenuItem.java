@@ -41,7 +41,8 @@ public class SemiCircularRadialMenuItem {
 		this.mMenuNormalColor = R.color.transparent_white;
 //		this.mMenuSelectedColor = R.color.transparent_grey;
 //        this.mMenuNormalColor = Color.WHITE;
-		this.mMenuSelectedColor = Color.LTGRAY;
+		this.mMenuSelectedColor = R.color.my_grey;
+//		this.mMenuSelectedColor = Color.LTGRAY;
 		this.mBackgroundColor = mMenuNormalColor;
 		this.mTextColor = Color.BLACK;
 		this.mIconDimen = 64;
