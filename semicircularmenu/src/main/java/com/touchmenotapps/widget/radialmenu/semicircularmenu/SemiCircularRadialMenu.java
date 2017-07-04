@@ -16,7 +16,10 @@
 
 package com.touchmenotapps.widget.radialmenu.semicircularmenu;
 
+import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.Map;
+import java.util.TreeMap;
 
 import com.touchmenotapps.widget.radialmenu.RadialMenuColors;
 
@@ -60,7 +63,7 @@ public class SemiCircularRadialMenu extends View {
 	private Paint mRadialMenuPaint = new Paint(Paint.ANTI_ALIAS_FLAG);	
 	private Point mViewAnchorPoints;	
 	private HashMap<String, SemiCircularRadialMenuItem> mMenuItems = new HashMap<String, SemiCircularRadialMenuItem>();
-	//Variables that can be user defined	
+	//Variables that can be user defined
 	private float mShadowRadius = 5 * getResources().getDisplayMetrics().density;	
 	private boolean isShowMenuText = false;	
 	private int mOrientation = HORIZONTAL_BOTTOM;
@@ -117,7 +120,9 @@ public class SemiCircularRadialMenu extends View {
 				float mStart = mStartAngle;
 				//Get the sweep angles based on the number of menu items
 				float mSweep = 180/mMenuItems.size();
-				for(SemiCircularRadialMenuItem item : mMenuItems.values()) {
+//                ArrayList<SemiCircularRadialMenuItem> sorted_menu_items =
+                Map<String, SemiCircularRadialMenuItem> mSortedItems = new TreeMap<String, SemiCircularRadialMenuItem>(mMenuItems);
+				for(SemiCircularRadialMenuItem item : mSortedItems.values()) {
 //					mRadialMenuPaint.setColor(item.getBackgroundColor());
                     if (item.getMenuID().equals(mPressedMenuItemID)) {
                         mRadialMenuPaint.setColor(item.getMenuSelectedColor());
