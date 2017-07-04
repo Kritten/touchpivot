@@ -35,6 +35,8 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         dataTable = (ListView) findViewById(R.id.dataTable);
+        dataTable.getChildCount()
+                dataTable.getchildat
 //        create the data manager (loads the data)
         dataManager = new DataManager(this);
 //        create the graph manager displays the data)
@@ -53,7 +55,7 @@ public class MainActivity extends AppCompatActivity{
 
         System.out.println(dataManager.getColumns());
 
-        setPivotColumn("annotatorC");
+
 
 //        graphManger.renderGraphBottom(entries);
 //        graphManger.renderGraphBottom(entries, dataManager.getColumns());
@@ -140,7 +142,9 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public void onMenuItemHovered() {
-            Toast.makeText(MainActivity.this, "hov "+this.name, Toast.LENGTH_SHORT).show();
+            setPivotColumn(name);
+
+//            Toast.makeText(MainActivity.this, "hov "+this.name, Toast.LENGTH_SHORT).show();
         }
     }
 
