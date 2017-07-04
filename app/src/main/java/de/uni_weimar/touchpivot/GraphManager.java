@@ -73,15 +73,23 @@ class GraphManager {
         }
 
         ChartItem chartItem = this.addGraph(entries, BarChart.class, Location.Bottom , this.dataManager.getColumns(), false);
-        chartItem.chart.setOnTouchListener(null);
+//        chartItem.chart.setOnTouchListener(null);
     }
 
     private void showStats() {
+        LinearLayout wrapperStats = (LinearLayout) activity.findViewById(R.id.wrapper_stats);
+        wrapperStats.setVisibility(View.VISIBLE);
+
         TextView textViewCountRows = (TextView) activity.findViewById(R.id.textview_count_rows);
         textViewCountRows.setText(Integer.toString(this.dataManager.getCountItems()));
 
         TextView textViewCountColumns = (TextView) activity.findViewById(R.id.textview_count_columns);
         textViewCountColumns.setText(Integer.toString(this.dataManager.getCountColumns()));
+    }
+
+    private void hideStats() {
+        LinearLayout wrapperStats = (LinearLayout) activity.findViewById(R.id.wrapper_stats);
+        wrapperStats.setVisibility(View.INVISIBLE);
     }
 
     public Chart getCurrentChart() {
@@ -227,12 +235,12 @@ class GraphManager {
     public void goBackInHistory(ChartItem chartItem) {
         System.out.println("go back");
         if(chartItem.location == Location.Top) {
-            if(historyCurrentState == 0) {
-                return;
-            }
+//            if(historyCurrentState == 0) {
+//                return;
+//            }
 
-            historyCurrentState -= 1;
-            ChartItem chartItemOld = listHistory.get(historyCurrentState);
+//            historyCurrentState -= 1;
+//            ChartItem chartItemOld = listHistory.get(historyCurrentState);
 
             chartItem.location = Location.Bottom;
 
@@ -271,6 +279,7 @@ class GraphManager {
                                                                public void run() {
                                                                    rootView.getOverlay().remove( srcView );
                                                                    destContainer.addView( srcView );
+                                                                   showStats();
                                                                }
                                                            } );
                                                    return true;
@@ -281,15 +290,16 @@ class GraphManager {
     }
 
     public void goForwardInHistory(ChartItem chartItem) {
+        hideStats();
         System.out.println("go forward");
 
         if(chartItem.location == Location.Bottom) {
-            if(historyCurrentState == listHistory.size() - 1) {
-                return;
-            }
+//            if(historyCurrentState == listHistory.size() - 1) {
+//                return;
+//            }
 
-            historyCurrentState += 1;
-            ChartItem chartItemOld = listHistory.get(historyCurrentState);
+//            historyCurrentState += 1;
+//            ChartItem chartItemOld = listHistory.get(historyCurrentState);
 
             chartItem.location = Location.Top;
 

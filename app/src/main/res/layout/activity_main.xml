@@ -14,12 +14,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/textViewListItem"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello World!" />
-
         <Button
             android:id="@+id/fan_menu_button"
             android:layout_width="50dp"
@@ -30,20 +24,17 @@
         <ListView
             android:id="@+id/dataTable"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
+            android:layout_height="match_parent" />
 
         <com.touchmenotapps.widget.radialmenu.semicircularmenu.SemiCircularRadialMenu
             android:id="@+id/radial_menu"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="gone"
-            android:padding="5dp" />
+            android:padding="5dp"
+            android:visibility="gone" />
 
 
     </RelativeLayout>
-
-
 
 
     <LinearLayout
@@ -69,10 +60,10 @@
                 <!--android:text="to" />-->
 
             <LinearLayout
+                android:id="@+id/wrapper_stats"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:orientation="horizontal">
+                android:layout_centerInParent="true">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
