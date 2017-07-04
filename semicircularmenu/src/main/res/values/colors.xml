@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="transparent_white">#FFFFFF77</color>
-    <color name="transparent_grey">#77777777</color>
+    <color name="transparent_white">#AAFFFFFF</color>
+    <color name="transparent_grey">#AACCCCCC</color>
+    <color name="semi_transparent_grey">#CCDDDDDD</color>
 </resources>

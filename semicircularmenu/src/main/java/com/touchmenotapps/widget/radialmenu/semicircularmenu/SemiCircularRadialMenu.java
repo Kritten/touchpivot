@@ -48,8 +48,10 @@ public class SemiCircularRadialMenu extends View {
 	//Private non-shared variables
 	private boolean isMenuVisible = false;	
 	private boolean isMenuTogglePressed = false;	
-	private boolean isMenuItemPressed = false;	
-	private String mPressedMenuItemID = null;	
+	private boolean isMenuItemPressed = false;
+    private boolean changedHoveredMenuItem = false;
+	private String mPressedMenuItemID = null;
+
 	private int mDiameter = 0;	
 	private float mRadius = 0.0f;	
 	private int mStartAngle = 0;		
@@ -62,12 +64,16 @@ public class SemiCircularRadialMenu extends View {
 	private float mShadowRadius = 5 * getResources().getDisplayMetrics().density;	
 	private boolean isShowMenuText = false;	
 	private int mOrientation = HORIZONTAL_BOTTOM;	
-	private int centerRadialColor = Color.WHITE;
-	private int mShadowColor = Color.GRAY;	
-	private String openMenuText = "Open";	
-	private String closeMenuText = "Close";	
+	private int centerRadialColor = R.color.transparent_white;
+	private int mShadowColor = R.color.transparent_white;
+//    private int centerRadialColor = Color.WHITE;
+//    private int mShadowColor = Color.GRAY;
+	private String openMenuText = "Open";
+	private String closeMenuText = "Close";
 	private String centerMenuText = openMenuText;	//Not to be set using setter method
-	private int mToggleMenuTextColor = Color.DKGRAY;
+//	private int mToggleMenuTextColor = Color.TRANSPARENT;
+	private int mToggleMenuTextColor = R.color.transparent_white;
+//	private int mToggleMenuTextColor = Color.DKGRAY;
 	private float textSize = 12 * getResources().getDisplayMetrics().density;
 	private int mOpenButtonScaleFactor = 3;
 		
@@ -89,7 +95,8 @@ public class SemiCircularRadialMenu extends View {
 	
 	private void init() {
 		mRadialMenuPaint.setTextSize(textSize);
-		mRadialMenuPaint.setColor(Color.WHITE);
+		mRadialMenuPaint.setColor(Color.TRANSPARENT);
+//		mRadialMenuPaint.setColor(Color.WHITE);
 	}
 	
 	@Override
@@ -172,7 +179,17 @@ public class SemiCircularRadialMenu extends View {
                         if(mMenuRect.contains((int) x, (int) y))
                             if(item.getBounds().contains((int) x, (int) y)) {
                                 isMenuItemPressed = true;
-                                mPressedMenuItemID = item.getMenuID();
+                                if (mPressedMenuItemID == item.getMenuID()) {
+                                    changedHoveredMenuItem = false;
+                                } else {
+                                    mPressedMenuItemID = item.getMenuID();
+                                    changedHoveredMenuItem = true;
+                                }
+                                if (changedHoveredMenuItem) {
+                                    if(item.getHoverCallback() != null) {
+                                        item.getHoverCallback().onMenuItemHovered();
+                                    }
+                                }
                                 invalidate();
                                 return true;
                             }
@@ -381,7 +398,7 @@ public class SemiCircularRadialMenu extends View {
 	 */
 	public void showMenu() {
 		isMenuVisible = true;
-		centerMenuText = openMenuText;
+		centerMenuText = closeMenuText;
 		invalidate();
 	}
 

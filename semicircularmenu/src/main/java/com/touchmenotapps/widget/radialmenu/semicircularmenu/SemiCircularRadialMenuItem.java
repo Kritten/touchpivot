@@ -18,10 +18,15 @@ public class SemiCircularRadialMenuItem {
 	private Path mPath;
 	private RectF mBounds;
 	private OnSemiCircularRadialMenuPressed mCallback;
+	private OnSemiCircularRadialMenuHovered mHoverCallback;
 	private int mIconDimen;
 	
 	public interface OnSemiCircularRadialMenuPressed {
 		public void onMenuItemPressed();
+	}
+
+	public interface OnSemiCircularRadialMenuHovered{
+		public void onMenuItemHovered();
 	}
 
 	/**
@@ -33,7 +38,9 @@ public class SemiCircularRadialMenuItem {
 		this.mMenuID = id;
 		this.mIcon = mIcon;
 		this.mText = mText;
-		this.mMenuNormalColor = Color.WHITE;
+		this.mMenuNormalColor = R.color.transparent_white;
+//		this.mMenuSelectedColor = R.color.transparent_grey;
+//        this.mMenuNormalColor = Color.WHITE;
 		this.mMenuSelectedColor = Color.LTGRAY;
 		this.mBackgroundColor = mMenuNormalColor;
 		this.mTextColor = Color.BLACK;
@@ -146,6 +153,21 @@ public class SemiCircularRadialMenuItem {
 	 */
 	public OnSemiCircularRadialMenuPressed getCallback() {
 		return mCallback;
+	}
+
+
+	/**
+	 * @param mHoverCallback the mHoverCallback to set
+	 */
+	public void setOnSemiCircularRadialMenuHovered(OnSemiCircularRadialMenuHovered mHoverCallback) {
+		this.mHoverCallback = mHoverCallback;
+	}
+
+	/**
+	 * @return the mCallback
+	 */
+	public OnSemiCircularRadialMenuHovered getHoverCallback() {
+		return mHoverCallback;
 	}
 	
 	/**

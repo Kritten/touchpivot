@@ -86,19 +86,17 @@ public class MainActivity extends AppCompatActivity{
     private void initFanMenu(ArrayList<String> columns) {
 //      mMenu = new SemiCircularRadialMenu(this);
         mMenu = (SemiCircularRadialMenu) findViewById(R.id.radial_menu);
-        mMenu.setShowMenuText(true);
+//        mMenu.setShowMenuText(true);
 
 
         int col_count = columns.size();
         for (int i = 0; i < col_count; i++) {
             String name = columns.get(i);
-            SemiCircularRadialMenuItem button = new SemiCircularRadialMenuItem(name, getResources().getDrawable(R.drawable.ic_rep), name);
-            button.setOnSemiCircularRadialMenuPressed(new SemiCircularRadialMenuItem.OnSemiCircularRadialMenuPressed() {
-                @Override
-                public void onMenuItemPressed() {
-                    Toast.makeText(MainActivity.this, "Clicked", Toast.LENGTH_LONG).show();
-                }
-            });
+
+            final SemiCircularRadialMenuItem button = new SemiCircularRadialMenuItem(name, getResources().getDrawable(R.drawable.ic_rep), name);
+            button.setOnSemiCircularRadialMenuPressed(new OnSemiCircularRadialMenuPressed(name));
+
+            button.setOnSemiCircularRadialMenuHovered(new OnSemiCircularRadialMenuHovered(name));
             System.out.println("ID " + button.getMenuID());
             mMenu.addMenuItem(button.getMenuID(), button);
         }
@@ -114,6 +112,34 @@ public class MainActivity extends AppCompatActivity{
             mMenu.setVisibility(View.VISIBLE);
             mMenu.showMenu();
             fanActivated = true;
+        }
+    }
+
+    public class OnSemiCircularRadialMenuPressed implements SemiCircularRadialMenuItem.OnSemiCircularRadialMenuPressed
+    {
+
+        String name;
+        public OnSemiCircularRadialMenuPressed(String n) {
+            this.name = n;
+        }
+
+        @Override
+        public void onMenuItemPressed() {
+            Toast.makeText(MainActivity.this, this.name, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public class OnSemiCircularRadialMenuHovered implements SemiCircularRadialMenuItem.OnSemiCircularRadialMenuHovered
+    {
+
+        String name;
+        public OnSemiCircularRadialMenuHovered(String n) {
+            this.name = n;
+        }
+
+        @Override
+        public void onMenuItemHovered() {
+            Toast.makeText(MainActivity.this, "hov "+this.name, Toast.LENGTH_SHORT).show();
         }
     }
 
