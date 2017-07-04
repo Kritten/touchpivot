@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity{
         }
     }
 
+
     public class OnSemiCircularRadialMenuPressed implements SemiCircularRadialMenuItem.OnSemiCircularRadialMenuPressed
     {
 
