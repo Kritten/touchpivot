@@ -16,6 +16,7 @@ import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.Chart;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.charts.RadarChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -27,6 +28,9 @@ import com.github.mikephil.charting.data.LineDataSet;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.RadarData;
+import com.github.mikephil.charting.data.RadarDataSet;
+import com.github.mikephil.charting.data.RadarEntry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 
 import java.util.ArrayList;
@@ -54,20 +58,24 @@ class GraphManager {
         listChartTypes.add(PieChart.class);
         listChartTypes.add(BarChart.class);
         listChartTypes.add(LineChart.class);
+        listChartTypes.add(RadarChart.class);
 
         renderInitialState();
     }
 
     private void renderInitialState() {
 //        this.showStats();
+        System.out.println("###################################");
 
         List<Entry> entries = new ArrayList<>();
         int counter = 0;
         for(String column: this.dataManager.getColumns()) {
+
             Set<String> set = new HashSet<>();
             for(String value: this.dataManager.getColumn(column)) {
                 set.add(value);
             }
+            System.out.println(counter);
             entries.add(new Entry(counter, set.size()));
             counter += 1;
         }
@@ -109,7 +117,10 @@ class GraphManager {
                 chart = this.createLineChart(entries, labels);
                 break;
             case "PieChart":
-                chart = this.createPieChart(entries);
+                chart = this.createPieChart(entries, labels);
+                break;
+            case "RadarChart":
+                chart = this.createRadarChart(entries, labels);
                 break;
         }
 
@@ -215,12 +226,11 @@ class GraphManager {
         return chartItem;
     }
 
-    private Chart createPieChart(List<Entry> entries) {
+    private Chart createPieChart(List<Entry> entries, final List<String> labels) {
         List<PieEntry> pieEntries = new ArrayList<>();
         for(Entry entry: entries) {
-//            System.out.println(entry.getY());
-//            System.out.println(Float.toString(entry.getX()));
-            pieEntries.add(new PieEntry(entry.getY(), Float.toString(entry.getX())));
+            pieEntries.add(new PieEntry(entry.getY(), labels.get((int) entry.getX())));
+//            pieEntries.add(new PieEntry(entry.getY(), Float.toString(entry.getX())));
         }
         PieChart chart = new PieChart(activity);
 
@@ -285,6 +295,57 @@ class GraphManager {
             xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
             xAxis.setValueFormatter(formatter);
         }
+
+        chart.setHighlightPerTapEnabled(false);
+
+        return chart;
+    }
+
+    private Chart createRadarChart(List<Entry> entries,  final List<String> labels) {
+        List<RadarEntry> radarEntries = new ArrayList<>();
+        for(Entry entry: entries) {
+//            , labels.get((int) entry.getX()))
+            radarEntries.add(new RadarEntry(entry.getY(), entry.getX()));
+        }
+        RadarChart chart = new RadarChart(activity);
+
+        RadarDataSet dataSet = new RadarDataSet(radarEntries, "asd");
+        RadarData data = new RadarData(dataSet);
+
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setValueFormatter(new IAxisValueFormatter() {
+
+            @Override
+            public String getFormattedValue(float value, AxisBase axis) {
+                try {
+                    return labels.get((int) value);
+                } catch (IndexOutOfBoundsException e) {
+                    return "";
+                }
+//
+            }
+        });
+//        data.setLabels(labels);
+
+        chart.setData(data);
+
+        System.out.println(data.getLabels());
+
+//        chart.setHighlightPerDragEnabled(false);
+
+//        if(labels != null) {
+//            IAxisValueFormatter formatter = new IAxisValueFormatter() {
+//                @Override
+//                public String getFormattedValue(float value, AxisBase axis) {
+//                    return labels.get((int) value);
+//                }
+//            };
+//
+//            XAxis xAxis = chart.getXAxis();
+//            xAxis.setGranularity(1f); // minimum axis-step (interval) is 1
+//            xAxis.setValueFormatter(formatter);
+//        }
+        chart.setRotationEnabled(false);
 
         chart.setHighlightPerTapEnabled(false);
 
@@ -419,7 +480,10 @@ class GraphManager {
                     chart = createLineChart(entries, labels);
                     break;
                 case "PieChart":
-                    chart = createPieChart(entries);
+                    chart = createPieChart(entries, labels);
+                    break;
+                case "RadarChart":
+                    chart = createRadarChart(entries, labels);
                     break;
             }
 
