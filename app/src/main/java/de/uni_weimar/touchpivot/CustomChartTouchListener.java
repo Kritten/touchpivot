@@ -45,7 +45,6 @@ public class CustomChartTouchListener implements View.OnTouchListener {
                         this.chartItem.switchLayout(false);
                     }
                 } else if(!this.layoutOnly) {
-                    System.out.println(this.layoutOnly);
                     if (velocityY < 0.0) {
                         graphManager.goBackInHistory(this.chartItem);
                     } else {

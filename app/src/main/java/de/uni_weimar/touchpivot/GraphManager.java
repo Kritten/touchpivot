@@ -150,7 +150,6 @@ class GraphManager {
 
         final float position_y = getAbsY( srcView );
 //        System.out.println(srcView.getParent().get);
-        System.out.println(position_y);
 
         RelativeLayout parent = (RelativeLayout) srcView.getParent();
         srcView.setOnChartGestureListener(null);
@@ -162,7 +161,6 @@ class GraphManager {
         srcView.setLayoutParams(params);
         destContainer.addView(srcView);
 
-        System.out.println(getAbsY( srcView ));
 
         srcView.getViewTreeObserver().addOnPreDrawListener( new ViewTreeObserver.OnPreDrawListener() {
                @Override
@@ -209,6 +207,9 @@ class GraphManager {
         chartItem.getCurrentChart().setOnTouchListener(new CustomChartTouchListener(chartItem, this, false));
 
         animate(chartItem, true);
+
+        historyCurrentState = listHistory.size();
+        listHistory.add(chartItem);
 //         goForwardInHistory(chartItem);
 
         return chartItem;
@@ -294,15 +295,29 @@ class GraphManager {
     }
 
     public void goBackInHistory(ChartItem chartItem) {
-            if(historyCurrentState == 0) {
-                return;
-            }
-
+        if(historyCurrentState == 0) {
+            return;
+        }
+        if(((View) chartItem.getCurrentChart().getParent()).getId() == R.id.layout_graph_bottom) {
+            return;
+        }
         System.out.println("go back");
 //            historyCurrentState -= 1;
 //            ChartItem chartItemOld = listHistory.get(historyCurrentState);
 
+        historyCurrentState--;
+        ChartItem chartItemNew = listHistory.get(historyCurrentState);
+        Chart chartNew = chartItemNew.getCurrentChart();
+
+        RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
+//        layout.removeAllViews();
+        layout.addView(chartNew);
+//        chartNew.setVisibility(View.VISIBLE);
+
+
         animate(chartItem, false);
+
+
 //            final View srcView  = chartItem.getCurrentChart();
 ////        final TextView srcView  = (TextView) activity.findViewById(R.id.textView);
 //            final RelativeLayout destContainer  = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
@@ -352,11 +367,25 @@ class GraphManager {
         if(historyCurrentState == listHistory.size() - 1) {
             return;
         }
-        System.out.println("go forward");
-        hideStats();
+        if(((View) chartItem.getCurrentChart().getParent()).getId() == R.id.layout_graph_top) {
+            return;
+        }
 
-//            ChartItem chartItemOld = listHistory.get(historyCurrentState);
-//            historyCurrentState++;
+        System.out.println("go forward");
+//        hideStats();
+
+
+        historyCurrentState++;
+        try {
+            ChartItem chartItemNew = listHistory.get(historyCurrentState + 1);
+            Chart chartNew = chartItemNew.getCurrentChart();
+            RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+            layout.addView(chartNew);
+
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("ECEPTION!!!");
+        }
+
 
         animate(chartItem, true);
 
