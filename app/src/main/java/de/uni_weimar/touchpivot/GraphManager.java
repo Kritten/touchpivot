@@ -51,7 +51,7 @@ class GraphManager {
         this.activity = activity;
         this.dataManager = dataManager;
 
-//        listChartTypes.add(PieChart.class);
+        listChartTypes.add(PieChart.class);
         listChartTypes.add(BarChart.class);
         listChartTypes.add(LineChart.class);
 
@@ -228,10 +228,7 @@ class GraphManager {
         PieData data = new PieData(dataSet);
         chart.setData(data);
 
-//        chart.setRotationEnabled(false);
-//        chart.setDrawHoleEnabled(false);
-//        chart.setHighlightPerTapEnabled(false);
-        chart.setTouchEnabled(false);
+        chart.setRotationEnabled(false);
 
         return chart;
     }
@@ -316,51 +313,6 @@ class GraphManager {
 
 
         animate(chartItem, false);
-
-
-//            final View srcView  = chartItem.getCurrentChart();
-////        final TextView srcView  = (TextView) activity.findViewById(R.id.textView);
-//            final RelativeLayout destContainer  = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
-//            final LinearLayout rootView  = (LinearLayout) activity.findViewById(R.id.rootView);
-//
-//        System.out.println(getAbsY( srcView ));
-//            final float position_y = getAbsY( srcView );
-//
-//            RelativeLayout parent = (RelativeLayout) srcView.getParent();
-//            parent.removeView(srcView);
-//
-//            int dpi = (int) (50 * activity.getResources().getDisplayMetrics().density);
-////        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(dpi, dpi);
-//
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-////        lparams.setMargins(0,(int) (10 * activity.getResources().getDisplayMetrics().density),0,0);
-//            srcView.setLayoutParams(params);
-////        destView.setBackgroundColor(activity.getResources().getColor(android.R.color.holo_blue_bright));
-//            destContainer.addView(srcView);
-//
-//            final ViewTreeObserver observer = srcView.getViewTreeObserver();
-//
-//            observer.addOnPreDrawListener( new ViewTreeObserver.OnPreDrawListener() {
-//                   @Override
-//                   public boolean onPreDraw() {
-//                       observer.removeOnPreDrawListener( this );
-//                       srcView.setTranslationY(  position_y - getAbsY( srcView ));
-//                       rootView.getOverlay().add( srcView );
-//                       srcView.animate().translationX( 0 ).translationY( 0 )
-//                               .setInterpolator( new DecelerateInterpolator( 2 ) )
-//                               .setDuration( 300 )
-//                               .withEndAction( new Runnable() {
-//                                   @Override
-//                                   public void run() {
-//                                       rootView.getOverlay().remove( srcView );
-//                                       destContainer.addView( srcView );
-//                                       showStats();
-//                                   }
-//                               } );
-//                       return true;
-//                   }
-//               }
-//            );
     }
 
     public void goForwardInHistory(ChartItem chartItem) {
@@ -388,51 +340,6 @@ class GraphManager {
 
 
         animate(chartItem, true);
-
-//            final Chart srcView  = chartItem.getCurrentChart();
-////        final TextView srcView  = (TextView) activity.findViewById(R.id.textView);
-//            final RelativeLayout destContainer  = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
-//            final LinearLayout rootView  = (LinearLayout) activity.findViewById(R.id.rootView);
-//
-//        System.out.println(getAbsY( srcView ));
-//            final float position_y = getAbsY( srcView );
-//
-//            RelativeLayout parent = (RelativeLayout) srcView.getParent();
-//            srcView.setOnChartGestureListener(null);
-////            System.out.println(parent);
-//                parent.removeView(srcView);
-////
-//            int dpi = (int) (50 * activity.getResources().getDisplayMetrics().density);
-//        LinearLayout.LayoutParams lparams = new LinearLayout.LayoutParams(dpi, dpi);
-//
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-////        lparams.setMargins(0,(int) (10 * activity.getResources().getDisplayMetrics().density),0,0);
-//            srcView.setLayoutParams(params);
-////        destView.setBackgroundColor(activity.getResources().getColor(android.R.color.holo_blue_bright));
-//            destContainer.addView(srcView);
-//
-//            final ViewTreeObserver observer = srcView.getViewTreeObserver();
-//
-//            observer.addOnPreDrawListener( new ViewTreeObserver.OnPreDrawListener() {
-//                   @Override
-//                   public boolean onPreDraw() {
-//                       observer.removeOnPreDrawListener( this );
-//                       srcView.setTranslationY(  position_y - getAbsY( srcView ));
-//                       rootView.getOverlay().add( srcView );
-//                       srcView.animate().translationX( 0 ).translationY( 0 )
-//                               .setInterpolator( new DecelerateInterpolator( 2 ) )
-//                               .setDuration( 300 )
-//                               .withEndAction( new Runnable() {
-//                                   @Override
-//                                   public void run() {
-//                                       rootView.getOverlay().remove( srcView );
-//                                       destContainer.addView( srcView );
-//                                   }
-//                               } );
-//                       return true;
-//                   }
-//               }
-//            );
     }
 
     private float getAbsY( View view ) {
