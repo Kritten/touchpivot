@@ -14,12 +14,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1">
 
-        <TextView
-            android:id="@+id/textViewListItem"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="Hello World!" />
-
         <Button
             android:id="@+id/fan_menu_button"
             android:layout_width="50dp"
