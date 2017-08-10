@@ -13,11 +13,13 @@ import com.github.mikephil.charting.listener.ChartTouchListener;
 public class CustomChartTouchListener implements View.OnTouchListener {
     private GraphManager.ChartItem chartItem;
     private GraphManager graphManager;
+    public boolean layoutOnly;
     private float initialX, initialY;
 
-    public CustomChartTouchListener(GraphManager.ChartItem chartItem, GraphManager graphManager) {
+    public CustomChartTouchListener(GraphManager.ChartItem chartItem, GraphManager graphManager, boolean layoutOnly) {
         this.chartItem = chartItem;
         this.graphManager = graphManager;
+        this.layoutOnly = layoutOnly;
     }
 
     @Override
@@ -38,11 +40,11 @@ public class CustomChartTouchListener implements View.OnTouchListener {
 
                 if(Math.abs(velocityX) > Math.abs(velocityY)) {
                     if(velocityX < 0.0) {
-                        graphManager.nextLayout(this.chartItem);
+                        this.chartItem.switchLayout(true);
                     } else {
-                        graphManager.previousLayout(this.chartItem);
+                        this.chartItem.switchLayout(false);
                     }
-                } else {
+                } else if(!this.layoutOnly) {
                     if (velocityY < 0.0) {
                         graphManager.goBackInHistory(this.chartItem);
                     } else {

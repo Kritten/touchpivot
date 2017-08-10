@@ -4,6 +4,8 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -40,8 +42,6 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         dataTable = (ListView) findViewById(R.id.dataTable);
-        //dataTable.getChildCount()
-        //        dataTable.getchildat
 //        create the data manager (loads the data)
         dataManager = new DataManager(this);
 //        create the graph manager displays the data)
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity{
 
     }
 
-    private void setPivotColumn(String column) {
+    private void setPivotColumn(String column, boolean is_preview) {
         ArrayList<String> listPivotColumn = dataManager.getColumn(column);
         List<Entry> entries = new ArrayList<>();
 
@@ -87,7 +87,12 @@ public class MainActivity extends AppCompatActivity{
             entries.add(new Entry(counter, value.getValue()));
             counter += 1;
         }
-        graphManger.addGraph(entries, BarChart.class, GraphManager.Location.Bottom, labels, true);
+
+        if(is_preview) {
+            graphManger.addPreview(entries, BarChart.class, labels);
+        } else {
+            graphManger.addGraph(entries, BarChart.class, labels, true);
+        }
     }
 
     private void highlightHover(String column) {
@@ -149,8 +154,9 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public void onMenuItemPressed() {
+            setPivotColumn(name, false);
             highlightHover(name);
-            setPivotColumn(name);
+            System.out.println("pressed");
         }
     }
 
@@ -164,9 +170,9 @@ public class MainActivity extends AppCompatActivity{
 
         @Override
         public void onMenuItemHovered() {
-            setPivotColumn(name);
+            setPivotColumn(name, true);
             highlightHover(name);
-//            Toast.makeText(MainActivity.this, "hov "+this.name, Toast.LENGTH_SHORT).show();
+            System.out.println("hovered");
         }
     }
 
