@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity{
         if(is_preview) {
             graphManger.addPreview(entries, BarChart.class, labels);
         } else {
-            graphManger.addGraph(entries, BarChart.class, labels, true);
+            graphManger.addGraph(entries, BarChart.class, labels, true, column);
             dataManager.setPivot(column);
         }
     }

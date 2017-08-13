@@ -196,9 +196,11 @@ class GraphManager {
         );
     }
 
-    public ChartItem addGraph(List<Entry> entries, Class chartType, final List<String> labels, boolean addToHistory) {
+    public ChartItem addGraph(List<Entry> entries, Class chartType, final List<String> labels, boolean addToHistory, String column) {
         Chart chart = createChart(entries, chartType, labels);
         ChartItem chartItem = new ChartItem(chart, chartType, entries, labels);
+        chartItem.column = column;
+
 
 //        if(historyCurrentState != -1) {
 //            System.out.println("new");
@@ -372,6 +374,7 @@ class GraphManager {
         layout.addView(chartNew);
 //        chartNew.setVisibility(View.VISIBLE);
 
+        dataManager.setPivot(chartItemNew.column);
 
         animate(chartItem, false);
     }
@@ -394,11 +397,11 @@ class GraphManager {
             Chart chartNew = chartItemNew.getCurrentChart();
             RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
             layout.addView(chartNew);
+            dataManager.setPivot(chartItemNew.column);
 
         } catch (IndexOutOfBoundsException e) {
             System.out.println("ECEPTION!!!");
         }
-
 
         animate(chartItem, true);
     }
@@ -417,6 +420,7 @@ class GraphManager {
         public List<Entry> entries;
         public List<String> labels;
         public boolean changeLayoutOnly = false;
+        public String column;
 
         public ChartItem(Chart chart, Class<BarChart> chartType, List<Entry> entries, List<String> labels) {
             this.charts.put(chartType, chart);

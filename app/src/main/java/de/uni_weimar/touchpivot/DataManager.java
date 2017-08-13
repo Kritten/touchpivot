@@ -107,9 +107,9 @@ public class DataManager {
             for(String line; (line = br.readLine()) != null; ) {
                 JSONObject obj = new JSONObject(line);
                 this.addItem(obj);
-                this.addItem(obj);
-                this.addItem(obj);
-                this.addItem(obj);
+//                this.addItem(obj);
+//                this.addItem(obj);
+//                this.addItem(obj);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
