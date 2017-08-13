@@ -107,9 +107,9 @@ public class DataManager {
             for(String line; (line = br.readLine()) != null; ) {
                 JSONObject obj = new JSONObject(line);
                 this.addItem(obj);
-                //this.addItem(obj);
-                //this.addItem(obj);
-                //this.addItem(obj);
+                this.addItem(obj);
+                this.addItem(obj);
+                this.addItem(obj);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -232,4 +232,23 @@ public class DataManager {
         return pivot_items;
     }
 
+    public ArrayList<JSONObject> get_items_with_header() {
+        ArrayList<JSONObject> list;
+        if (pivoted_flag){
+            list = new ArrayList<>(selected_items);
+        } else {
+            list = new ArrayList<>(list_data_items);
+        }
+
+        JSONObject headers = new JSONObject();
+        for(String column: list_columns) {
+            try {
+                headers.put(column, column);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        list.add(0, headers);
+        return list;
+    }
 }
