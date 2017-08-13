@@ -49,7 +49,7 @@ public class DataArrayAdapter extends ArrayAdapter<JSONObject> {
         }
         try {
             for(String column: dataManager.getColumns()) {
-                TextView textView =mapColumns.get(column);
+                TextView textView = mapColumns.get(column);
                 textView.setText(dataItem.getString(column));
             }
         } catch (JSONException e) {

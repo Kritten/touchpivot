@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity{
 
     private void setPivotColumn(String column, boolean is_preview) {
         ArrayList<String> listPivotColumn = dataManager.getColumn(column);
+
         List<Entry> entries = new ArrayList<>();
 
         Map<String, Integer> map = new HashMap<>();
@@ -79,7 +80,6 @@ public class MainActivity extends AppCompatActivity{
             }
         }
 
-        System.out.println(map);
         int counter = 0;
         List<String> labels = new ArrayList<>();
         for(Map.Entry<String, Integer> value: map.entrySet()) {
@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity{
             graphManger.addPreview(entries, BarChart.class, labels);
         } else {
             graphManger.addGraph(entries, BarChart.class, labels, true);
+            dataManager.setPivot(column);
         }
     }
 
@@ -115,7 +116,6 @@ public class MainActivity extends AppCompatActivity{
 //      mMenu = new SemiCircularRadialMenu(this);
         mMenu = (SemiCircularRadialMenu) findViewById(R.id.radial_menu);
         mMenu.setShowMenuText(true);
-
 
         int col_count = columns.size();
         for (int i = 0; i < col_count; i++) {
@@ -156,7 +156,7 @@ public class MainActivity extends AppCompatActivity{
         public void onMenuItemPressed() {
             setPivotColumn(name, false);
             highlightHover(name);
-            System.out.println("pressed");
+
         }
     }
 
@@ -175,5 +175,6 @@ public class MainActivity extends AppCompatActivity{
             System.out.println("hovered");
         }
     }
+
 
 }
