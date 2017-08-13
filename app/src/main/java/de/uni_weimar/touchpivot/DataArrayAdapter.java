@@ -2,6 +2,7 @@ package de.uni_weimar.touchpivot;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,6 +53,15 @@ public class DataArrayAdapter extends ArrayAdapter<JSONObject> {
             for(int i = 0; i < convertLayout.getChildCount(); i++) {
                 TextView v = (TextView) convertLayout.getChildAt(i);
                 v.setText(dataItem.getString(dataManager.getColumns().get(i)));
+
+                if(!dataManager.selected_pivot_preview.equals("")) {
+                    int idx = dataManager.getColumns().indexOf(dataManager.selected_pivot_preview);
+                    if (i == idx) {
+                        v.setBackgroundColor(Color.WHITE);
+                    } else {
+                        v.setBackgroundColor(context.getResources().getColor(R.color.highlight_grey));
+                    }
+                }
 
                 if(position == 0) {
                     v.setTypeface(null, Typeface.BOLD);

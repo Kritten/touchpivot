@@ -397,11 +397,11 @@ class GraphManager {
             Chart chartNew = chartItemNew.getCurrentChart();
             RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
             layout.addView(chartNew);
-            dataManager.setPivot(chartItemNew.column);
 
         } catch (IndexOutOfBoundsException e) {
             System.out.println("ECEPTION!!!");
         }
+        dataManager.setPivot(chartItem.column);
 
         animate(chartItem, true);
     }
