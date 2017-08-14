@@ -89,26 +89,13 @@ public class MainActivity extends AppCompatActivity{
         }
 
         if(is_preview) {
+            dataManager.selected_pivot_preview = column;
+            dataManager.setPivot("");
             graphManger.addPreview(entries, BarChart.class, labels);
         } else {
-            graphManger.addGraph(entries, BarChart.class, labels, true);
+            dataManager.selected_pivot_preview = "";
+            graphManger.addGraph(entries, BarChart.class, labels, true, column);
             dataManager.setPivot(column);
-        }
-    }
-
-    private void highlightHover(String column) {
-        int row_count = dataTable.getChildCount();
-        for (int i = 0; i < row_count; i++){
-            int idx = columnHeaders.indexOf(column);
-            LinearLayout row = (LinearLayout) dataTable.getChildAt(i);
-            int col_count = row.getChildCount();
-            for (int j = 0; j < col_count; j++){
-                if (j == idx) {
-                    row.getChildAt(j).setBackgroundColor(Color.WHITE);
-                } else {
-                    row.getChildAt(j).setBackgroundColor(getResources().getColor(R.color.highlight_grey));
-                }
-            }
         }
     }
 
@@ -155,8 +142,6 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void onMenuItemPressed() {
             setPivotColumn(name, false);
-            highlightHover(name);
-
         }
     }
 
@@ -171,7 +156,7 @@ public class MainActivity extends AppCompatActivity{
         @Override
         public void onMenuItemHovered() {
             setPivotColumn(name, true);
-            highlightHover(name);
+
             System.out.println("hovered");
         }
     }

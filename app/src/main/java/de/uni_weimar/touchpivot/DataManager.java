@@ -1,6 +1,10 @@
 package de.uni_weimar.touchpivot;
 
 import android.app.Activity;
+import android.graphics.Color;
+import android.view.View;
+import android.widget.BaseAdapter;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.content.res.Resources;
 
@@ -30,7 +34,8 @@ public class DataManager {
     //
     private ArrayList<JSONObject> list_data_items = new ArrayList<>();
     private ArrayList<JSONObject> selected_items = new ArrayList<>();
-    private String selected_pivot = new String();
+    public String selected_pivot = new String();
+    public String selected_pivot_preview = new String();
     private ArrayList<String> list_columns = new ArrayList<>();
     private boolean pivoted_flag = false;
 
@@ -107,9 +112,9 @@ public class DataManager {
             for(String line; (line = br.readLine()) != null; ) {
                 JSONObject obj = new JSONObject(line);
                 this.addItem(obj);
-                //this.addItem(obj);
-                //this.addItem(obj);
-                //this.addItem(obj);
+//                this.addItem(obj);
+//                this.addItem(obj);
+//                this.addItem(obj);
             }
         } catch (FileNotFoundException e) {
             e.printStackTrace();
@@ -135,7 +140,7 @@ public class DataManager {
         }
     }
 
-    public void setPivot(String col) {
+    public void setPivot(final String col) {
         if (col.equals("")){
             selected_pivot = col;
             pivoted_flag = false;
@@ -145,7 +150,7 @@ public class DataManager {
             pivoted_flag = true;
         }
 
-        ListView dataTable = (ListView)activity.findViewById(R.id.dataTable);
+        final ListView dataTable = (ListView)activity.findViewById(R.id.dataTable);
         DataArrayAdapter adapter = new DataArrayAdapter(activity, this);
         dataTable.setAdapter(adapter);
         dataTable.setDivider(null);
@@ -232,4 +237,23 @@ public class DataManager {
         return pivot_items;
     }
 
+    public ArrayList<JSONObject> get_items_with_header() {
+        ArrayList<JSONObject> list;
+        if (pivoted_flag){
+            list = new ArrayList<>(selected_items);
+        } else {
+            list = new ArrayList<>(list_data_items);
+        }
+
+        JSONObject headers = new JSONObject();
+        for(String column: list_columns) {
+            try {
+                headers.put(column, column);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        list.add(0, headers);
+        return list;
+    }
 }

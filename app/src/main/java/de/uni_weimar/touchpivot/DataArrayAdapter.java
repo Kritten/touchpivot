@@ -2,6 +2,8 @@ package de.uni_weimar.touchpivot;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -20,7 +22,7 @@ public class DataArrayAdapter extends ArrayAdapter<JSONObject> {
     HashMap<String, TextView> mapColumns = new HashMap<>();
 
     public DataArrayAdapter(Activity context, DataManager dataManager) {
-        super(context, 0, dataManager.get_items());
+        super(context, 0, dataManager.get_items_with_header());
         this.dataManager = dataManager;
         this.context = context;
     }
@@ -28,18 +30,17 @@ public class DataArrayAdapter extends ArrayAdapter<JSONObject> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         JSONObject dataItem = getItem(position);
-        if (convertView == null) {
+
+        if  (convertView == null) {
             LinearLayout layoutColumn = new LinearLayout(context);
-//            layoutColumn.setOrientation(LinearLayout.HORIZONTAL);
             LinearLayout.LayoutParams lparams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-//            LinearLayout.LayoutParams lparams1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
             layoutColumn.setLayoutParams(lparams1);
+
             for(String column: dataManager.getColumns()) {
                 TextView textView = new TextView(context);
                 textView.setPadding(3, 0, 3, 0);
                 int id = TextView.generateViewId();
                 textView.setId(id);
-//                TableLayout.LayoutParams lparams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT);
                 TableLayout.LayoutParams lparams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.MATCH_PARENT, 1);
                 textView.setLayoutParams(lparams);
                 layoutColumn.addView(textView);
@@ -47,14 +48,36 @@ public class DataArrayAdapter extends ArrayAdapter<JSONObject> {
             }
             convertView = layoutColumn;
         }
+        LinearLayout convertLayout = (LinearLayout) convertView;
         try {
-            for(String column: dataManager.getColumns()) {
-                TextView textView = mapColumns.get(column);
-                textView.setText(dataItem.getString(column));
+            for(int i = 0; i < convertLayout.getChildCount(); i++) {
+                TextView v = (TextView) convertLayout.getChildAt(i);
+                v.setText(dataItem.getString(dataManager.getColumns().get(i)));
+
+                if(!dataManager.selected_pivot_preview.equals("")) {
+                    int idx = dataManager.getColumns().indexOf(dataManager.selected_pivot_preview);
+                    if (i == idx) {
+                        v.setBackgroundColor(Color.WHITE);
+                    } else {
+                        v.setBackgroundColor(context.getResources().getColor(R.color.highlight_grey));
+                    }
+                }
+
+                if(position == 0) {
+                    v.setTypeface(null, Typeface.BOLD);
+                } else {
+                    v.setTypeface(null, Typeface.NORMAL);
+                }
             }
+
+//            for(String column: dataManager.getColumns()) {
+//                TextView textView = mapColumns.get(column);
+//                textView.setText(dataItem.getString(column));
+////
+//            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-        return convertView;
+        return convertLayout;
     }
 }
