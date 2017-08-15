@@ -1,5 +1,6 @@
 package de.uni_weimar.touchpivot;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -56,13 +57,20 @@ public class MainActivity extends AppCompatActivity{
         fanMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showFanMenu();
+                toggleFanMenu();
             }
         });
         resetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                dataManager.setPivot("");
+//                hideFanMenu();
+//                dataManager.setPivot("");
+                Intent intent = getIntent();
+                overridePendingTransition(0, 0);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+                finish();
+                overridePendingTransition(0, 0);
+                startActivity(intent);
             }
         });
         initFanMenu(columnHeaders);
@@ -111,6 +119,8 @@ public class MainActivity extends AppCompatActivity{
 //      mMenu = new SemiCircularRadialMenu(this);
         mMenu = (SemiCircularRadialMenu) findViewById(R.id.radial_menu);
         mMenu.setShowMenuText(true);
+        mMenu.setCloseMenuText("");
+        mMenu.setOpenMenuText("");
 
         int col_count = columns.size();
         for (int i = 0; i < col_count; i++) {
@@ -126,7 +136,12 @@ public class MainActivity extends AppCompatActivity{
         // adapted sample code from https://github.com/strider2023/Radial-Menu-Widget-Android (1.7.2017)
     }
 
-    private void showFanMenu() {
+    private void hideFanMenu() {
+        mMenu.setVisibility(View.GONE);
+        mMenu.dismissMenu();
+        fanActivated = false;
+    }
+    private void toggleFanMenu() {
         if (fanActivated){
             mMenu.setVisibility(View.GONE);
             mMenu.dismissMenu();

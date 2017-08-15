@@ -64,7 +64,7 @@ class GraphManager {
     }
 
     private void renderInitialState() {
-//        this.showStats();
+        this.showStats();
         System.out.println("###################################");
 
         List<Entry> entries = new ArrayList<>();
@@ -93,6 +93,16 @@ class GraphManager {
     }
 
     private void showStats() {
+//        RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
+//        layout.removeAllViews();
+//
+//        LinearLayout linearLayoutWrapperStats = new LinearLayout(activity);
+//        linearLayoutWrapperStats.setId(R.id.wrapper_stats);
+////        linearLayoutWrapperStats.setOrientation(LinearLayout.VERTICAL);
+//        LinearLayout.LayoutParams paramsWrapperStats = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+////        paramsWrapperStats.addRule(RelativeLayout.CENTER_IN_PARENT, RelativeLayout.TRUE);
+//        linearLayoutWrapperStats.setLayoutParams(paramsWrapperStats);
+
         LinearLayout wrapperStats = (LinearLayout) activity.findViewById(R.id.wrapper_stats);
         wrapperStats.setVisibility(View.VISIBLE);
 

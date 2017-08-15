@@ -107,7 +107,8 @@ public class DataManager {
      */
     private void loadDataItems() {
         try {
-            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.exported_data)));
+//            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.exported_data)));
+            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.exported_data_new)));
 //            BufferedReader br = new BufferedReader( new InputStreamReader(resources.openRawResource(R.raw.file_short)));
             for(String line; (line = br.readLine()) != null; ) {
                 JSONObject obj = new JSONObject(line);
