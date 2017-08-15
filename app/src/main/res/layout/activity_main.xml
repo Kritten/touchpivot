@@ -38,7 +38,6 @@
             android:id="@+id/reset_button"
             android:layout_width="68dp"
             android:text="Reset"
-            android:visibility="gone"
             android:layout_height="35dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentBottom="true" />

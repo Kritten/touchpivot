@@ -327,11 +327,7 @@ class GraphManager {
 //
             }
         });
-//        data.setLabels(labels);
-
         chart.setData(data);
-
-        System.out.println(data.getLabels());
 
 //        chart.setHighlightPerDragEnabled(false);
 
@@ -362,15 +358,13 @@ class GraphManager {
             return;
         }
         System.out.println("go back");
-//            historyCurrentState -= 1;
-//            ChartItem chartItemOld = listHistory.get(historyCurrentState);
 
         historyCurrentState--;
         ChartItem chartItemNew = listHistory.get(historyCurrentState);
         Chart chartNew = chartItemNew.getCurrentChart();
+//        System.out.println(chartItemNew.);
 
         RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
-//        layout.removeAllViews();
         layout.addView(chartNew);
 //        chartNew.setVisibility(View.VISIBLE);
 
@@ -399,7 +393,7 @@ class GraphManager {
             layout.addView(chartNew);
 
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("ECEPTION!!!");
+            System.out.println("OLDEST HISTORY STEP REACHED");
         }
         dataManager.setPivot(chartItem.column);
 
@@ -458,20 +452,26 @@ class GraphManager {
             }
         }
 
-        private void updateChart(Chart currentChart) {
-            Chart chart = charts.get(chartType);
+        private void updateChart(Chart chartOld) {
+            Chart chartNew = charts.get(chartType);
 
-//            RelativeLayout parent = (RelativeLayout) currentChart.getParent();
+            RelativeLayout parentOld = (RelativeLayout) chartOld.getParent();
+            RelativeLayout parentNew = (RelativeLayout) chartNew.getParent();
+            System.out.println(parentOld);
+            System.out.println(parentNew);
 //            RelativeLayout layout;
 //            if current chart is drawn at bottom
-//            if(parent.getId() == R.id.layout_graph_bottom) {
+            if(
+                    (parentOld.getId() == R.id.layout_graph_bottom && parentNew.getId() == R.id.layout_graph_top) ||
+                    (parentOld.getId() == R.id.layout_graph_top && parentNew.getId() == R.id.layout_graph_bottom)
+                    ) {
+                parentNew.removeView(chartNew);
+                parentOld.addView(chartNew);
 //                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
-//            } else {
-//                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
-//            }
-//            layout.addView(chart);
-            chart.setVisibility(View.VISIBLE);
-            currentChart.setVisibility(View.GONE);
+            }
+            chartNew.setVisibility(View.VISIBLE);
+            chartOld.setVisibility(View.GONE);
+//            parentOld.removeView(chartOld);
         }
 
         private void createChart(Chart currentChart) {
@@ -510,6 +510,7 @@ class GraphManager {
             layout.addView(chart);
 
             currentChart.setVisibility(View.GONE);
+//            parent.removeView(currentChart);
             chart.setOnTouchListener(new CustomChartTouchListener(this, GraphManager.this, changeLayoutOnly));
 
             charts.put(chartType, chart);
