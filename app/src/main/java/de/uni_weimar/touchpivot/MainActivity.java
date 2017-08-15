@@ -130,10 +130,13 @@ public class MainActivity extends AppCompatActivity{
         if (fanActivated){
             mMenu.setVisibility(View.GONE);
             mMenu.dismissMenu();
+            dataManager.setPivot("");
+            fanMenuButton.setText("reset");
             fanActivated = false;
         } else {
             mMenu.setVisibility(View.VISIBLE);
             mMenu.showMenu();
+            fanMenuButton.setText("on");
             fanActivated = true;
         }
     }

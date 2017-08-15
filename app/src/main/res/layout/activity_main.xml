@@ -34,12 +34,15 @@
             android:layout_height="match_parent"
             android:padding="5dp"
             android:visibility="gone" />
-
-
-
-
+        <Button
+            android:id="@+id/reset_button"
+            android:layout_width="68dp"
+            android:text="Reset"
+            android:visibility="gone"
+            android:layout_height="35dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentBottom="true" />
     </RelativeLayout>
-
 
     <LinearLayout
         android:id="@+id/rootView"
@@ -47,8 +50,6 @@
         android:layout_height="match_parent"
         android:layout_weight="1"
         android:orientation="vertical">
-
-
         <RelativeLayout
             android:id="@+id/layout_graph_top"
             android:layout_width="match_parent"
@@ -122,13 +123,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_weight="1">
-            <Button
-                android:id="@+id/reset_button"
-                android:layout_width="70dp"
-                android:text="Reset"
-                android:layout_height="35dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true" />
+
         </RelativeLayout>
     </LinearLayout>
 </LinearLayout >
