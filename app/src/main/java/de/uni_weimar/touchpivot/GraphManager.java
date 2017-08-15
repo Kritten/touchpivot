@@ -87,6 +87,7 @@ class GraphManager {
         chart.invalidate();
         ChartItem chartItem = new ChartItem(chart, BarChart.class, entries, this.dataManager.getColumns());
         chartItem.changeLayoutOnly = true;
+        chartItem.isLocatedAtTop = false;
         chart.setOnTouchListener(new CustomChartTouchListener(chartItem, this, true));
 //        animate(chartItem, true);
     }
@@ -144,6 +145,7 @@ class GraphManager {
         layout.removeAllViews();
 
         layout.addView(chart);
+        chartItem.isLocatedAtTop = false;
 
         chartItem.getCurrentChart().setOnTouchListener(new CustomChartTouchListener(chartItem, this, true));
     }
@@ -153,8 +155,9 @@ class GraphManager {
         final RelativeLayout destContainer;
         if(up) {
             destContainer  = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
+            chartItem.isLocatedAtTop = true;
         } else {
-
+            chartItem.isLocatedAtTop = false;
             destContainer  = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
         }
         final LinearLayout rootView  = (LinearLayout) activity.findViewById(R.id.rootView);
@@ -171,7 +174,6 @@ class GraphManager {
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
         srcView.setLayoutParams(params);
         destContainer.addView(srcView);
-
 
         srcView.getViewTreeObserver().addOnPreDrawListener( new ViewTreeObserver.OnPreDrawListener() {
                @Override
@@ -217,6 +219,7 @@ class GraphManager {
         RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
         layout.removeAllViews();
         layout.addView(chart);
+        chartItem.isLocatedAtTop = false;
         chartItem.getCurrentChart().setOnTouchListener(new CustomChartTouchListener(chartItem, this, false));
 
         animate(chartItem, true);
@@ -366,6 +369,7 @@ class GraphManager {
 
         RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
         layout.addView(chartNew);
+        chartItemNew.isLocatedAtTop = true;
 //        chartNew.setVisibility(View.VISIBLE);
 
         dataManager.setPivot(chartItemNew.column);
@@ -391,6 +395,7 @@ class GraphManager {
             Chart chartNew = chartItemNew.getCurrentChart();
             RelativeLayout layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
             layout.addView(chartNew);
+            chartItemNew.isLocatedAtTop = false;
 
         } catch (IndexOutOfBoundsException e) {
             System.out.println("OLDEST HISTORY STEP REACHED");
@@ -415,6 +420,7 @@ class GraphManager {
         public List<String> labels;
         public boolean changeLayoutOnly = false;
         public String column;
+        public boolean isLocatedAtTop = false;
 
         public ChartItem(Chart chart, Class<BarChart> chartType, List<Entry> entries, List<String> labels) {
             this.charts.put(chartType, chart);
@@ -456,22 +462,33 @@ class GraphManager {
             Chart chartNew = charts.get(chartType);
 
             RelativeLayout parentOld = (RelativeLayout) chartOld.getParent();
-            RelativeLayout parentNew = (RelativeLayout) chartNew.getParent();
-            System.out.println(parentOld);
-            System.out.println(parentNew);
+//            RelativeLayout parentNew = (RelativeLayout) chartNew.getParent();
+//            System.out.println(parentOld);
+
+            RelativeLayout layoutBottom = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+            RelativeLayout layoutTop = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
+
+            if(isLocatedAtTop) {
+                layoutBottom.removeView(chartNew);
+                layoutTop.addView(chartNew);
+            } else {
+                layoutTop.removeView(chartNew);
+                layoutBottom.addView(chartNew);
+            }
+//            System.out.println(parentNew);
 //            RelativeLayout layout;
 //            if current chart is drawn at bottom
-            if(
-                    (parentOld.getId() == R.id.layout_graph_bottom && parentNew.getId() == R.id.layout_graph_top) ||
-                    (parentOld.getId() == R.id.layout_graph_top && parentNew.getId() == R.id.layout_graph_bottom)
-                    ) {
-                parentNew.removeView(chartNew);
-                parentOld.addView(chartNew);
-//                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
-            }
-            chartNew.setVisibility(View.VISIBLE);
-            chartOld.setVisibility(View.GONE);
-//            parentOld.removeView(chartOld);
+//            if(
+//                    (parentOld.getId() == R.id.layout_graph_bottom && parentNew.getId() == R.id.layout_graph_top) ||
+//                    (parentOld.getId() == R.id.layout_graph_top && parentNew.getId() == R.id.layout_graph_bottom)
+//                    ) {
+//                parentNew.removeView(chartNew);
+//                parentOld.addView(chartNew);
+////                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+//            }
+//            chartNew.setVisibility(View.VISIBLE);
+//            chartOld.setVisibility(View.GONE);
+            parentOld.removeView(chartOld);
         }
 
         private void createChart(Chart currentChart) {
@@ -501,16 +518,26 @@ class GraphManager {
 
             RelativeLayout parent = (RelativeLayout) currentChart.getParent();
             RelativeLayout layout;
-//            if current chart is drawn at bottom
-            if(parent.getId() == R.id.layout_graph_bottom) {
-                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
-            } else {
-                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
-            }
-            layout.addView(chart);
+//            if current chart is drawn at
 
-            currentChart.setVisibility(View.GONE);
-//            parent.removeView(currentChart);
+            RelativeLayout layoutBottom = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+            RelativeLayout layoutTop = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
+            if(isLocatedAtTop) {
+                layoutBottom.removeView(chart);
+                layoutTop.addView(chart);
+            } else {
+                layoutTop.removeView(chart);
+                layoutBottom.addView(chart);
+            }
+//            if(parent.getId() == R.id.layout_graph_bottom) {
+//                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_bottom);
+//            } else {
+//                layout = (RelativeLayout) activity.findViewById(R.id.layout_graph_top);
+//            }
+//            layout.addView(chart);
+
+//            currentChart.setVisibility(View.GONE);
+            parent.removeView(currentChart);
             chart.setOnTouchListener(new CustomChartTouchListener(this, GraphManager.this, changeLayoutOnly));
 
             charts.put(chartType, chart);
