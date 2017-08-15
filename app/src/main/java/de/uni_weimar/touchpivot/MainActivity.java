@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity{
     private RelativeLayout dataView;
     private SemiCircularRadialMenu mMenu;
     private Button fanMenuButton;
+    private Button resetButton;
     private boolean fanActivated = false;
 
     ArrayList<String> columnHeaders;
@@ -51,10 +52,17 @@ public class MainActivity extends AppCompatActivity{
         // init fan menu
         dataView = (RelativeLayout) findViewById(R.id.data_view);
         fanMenuButton = (Button) findViewById(R.id.fan_menu_button);
+        resetButton = (Button) findViewById(R.id.reset_button);
         fanMenuButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 showFanMenu();
+            }
+        });
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dataManager.setPivot("");
             }
         });
         initFanMenu(columnHeaders);
